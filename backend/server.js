@@ -24,11 +24,34 @@ console.log("Express app created");
 app.use(cors());
 app.use(express.json());
 
-// Simple test route
+const path = require("path");
+
+app.use(express.static(path.join(__dirname, "..", "frontend")));
+
 app.get("/", (req, res) => {
-  console.log("Received request on root route");
-  res.send("Backend is running successfully!");
+  res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
 });
+
+// // Simple test route
+// app.get("/", (req, res) => {
+//   console.log("Received request on root route");
+//   res.send("Backend is running successfully!");
+// });
+
+// LOGIN ROUTE (captures username/email + password)
+app.post("/auth/login", (req, res) => {
+  console.log("Received login request!");
+
+  // Extract data from frontend
+  const { email, password } = req.body;
+
+  console.log("Email received:", email);
+  console.log("Password received:", password);
+
+  // Send a response back to frontend
+  res.json({ message: "Login data received", email });
+});
+
 
 const PORT = process.env.PORT || 3000;
 console.log(`Port selected: ${PORT}`);
