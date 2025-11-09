@@ -385,6 +385,25 @@
     </div>
 
     <script>
+    async function checkAuth() {
+    try {
+        const response = await fetch('http://localhost:3000/api/check-auth', {
+        credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (!data.authenticated) {
+        window.location.href = '/login.html';
+        }
+    } catch (err) {
+        console.error('Auth check failed:', err);
+        window.location.href = '/login.html';
+    }
+    }
+
+    // Call on page load
+    checkAuth();
+
         const carousel = document.getElementById('carousel');
         const container = carousel.closest('.game-carousel-container');
 

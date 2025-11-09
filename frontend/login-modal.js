@@ -1,80 +1,64 @@
-// Toggle the sign-in dropdown
 const toggle = document.getElementById("signin-toggle");
 const panel  = document.getElementById("signin-panel");
 const form   = document.getElementById("signinForm");
 const msg    = document.getElementById("signin-msg");
 
 function openPanel() {
-  panel.classList.remove("hidden");
-  panel.setAttribute("aria-hidden", "false");
+  panel?.classList.remove("hidden");
+  panel?.setAttribute("aria-hidden", "false");
 }
-
 function closePanel() {
-  panel.classList.add("hidden");
-  panel.setAttribute("aria-hidden", "true");
+  panel?.classList.add("ckhidden");
+  panel?.setAttribute("aria-hidden", "true");
 }
-
-function isOpen() {
-  return !panel.classList.contains("hidden");
-}
+function isOpen() { return panel && !panel.classList.contains("hidden"); }
 
 if (toggle && panel) {
-  // Open/close on toggle
-  toggle.addEventListener("click", (e) => {
-    e.preventDefault();
-    isOpen() ? closePanel() : openPanel();
-  });
-
-  // Prevent outside handler when clicking inside
-  panel.addEventListener("pointerdown", (e) => {
-    e.stopPropagation();
-  });
-  toggle.addEventListener("pointerdown", (e) => {
-    e.stopPropagation();
-  });
-
-  // Close only on true outside clicks (use pointerdown for reliability)
+  toggle.addEventListener("click", (e) => { e.preventDefault(); isOpen() ? closePanel() : openPanel(); });
   document.addEventListener("pointerdown", (e) => {
     if (!isOpen()) return;
-    const clickedToggle = toggle.contains(e.target);
-    const clickedInsidePanel = panel.contains(e.target);
-    if (!clickedToggle && !clickedInsidePanel) {
-      closePanel();
-    }
+    if (!panel.contains(e.target) && !toggle.contains(e.target)) closePanel();
   });
 }
 
-// Submit sign-in to backend (uses your existing POST /auth/login)
-if (form){
-  form.addEventListener("submit", async (e)=>{
+if (form) {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    msg.textContent = "Signing in…";
+    if (msg) msg.textContent = "Signing in…";
 
-    const emailOrUser = document.getElementById("si-username").value.trim();
-    const password    = document.getElementById("si-password").value;
+    // Accept si-username, si-email, or email input ids
+    const userEl = document.getElementById("si-username")
+                 || document.getElementById("si-email")
+                 || document.getElementById("email");
+    const passEl = document.getElementById("si-password")
+                 || document.getElementById("password");
 
-    try{
-      const res = await fetch("http://localhost:3000/auth/login", {
+    const email = userEl ? userEl.value.trim() : '';
+    const password = passEl ? passEl.value : '';
+
+    if (!email || !password) {
+      if (msg) msg.textContent = "Enter email and password";
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/login', {
         method: "POST",
         headers: { "Content-Type":"application/json" },
-        body: JSON.stringify({ email: emailOrUser, password })
+        credentials: "include",
+        body: JSON.stringify({ email, password })
       });
-
       const data = await res.json();
-
-      if (res.ok && data.success) {
-        msg.textContent = "Signed in! Redirecting...";
-        setTimeout(() => {
-          window.location.href = "quest_user.html";
-        }, 800);
+      if (res.ok) {
+        if (msg) msg.textContent = "Signed in. Redirecting...";
+        // small delay to allow message to show
+        setTimeout(() => { window.location.href = data.redirect || "quest_user.html"; }, 300);
       } else {
-        msg.textContent = data?.message || "Invalid credentials.";
+        if (msg) msg.textContent = data.error || 'Invalid credentials';
       }
-
-    }catch(err){
-      console.log(err);
-      msg.textContent = "Network error. Is the backend running?";
+    } catch (err) {
+      console.error(err);
+      if (msg) msg.textContent = "Network error. Is the backend running?";
     }
   });
 }
-

@@ -1,15 +1,30 @@
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-  e.preventDefault(); // prevents the page from refreshing
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('loginForm');
+  const msg = document.getElementById('msg');
+  if (!form) return;
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = (document.getElementById('email') || {}).value?.trim() || '';
+    const password = (document.getElementById('password') || {}).value || '';
+    if (!email || !password) { if (msg) msg.textContent = 'Enter email and password'; return; }
 
-  const response = await fetch("http://localhost:3000/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.href = data.redirect || '/quest_user.html';
+      } else {
+        if (msg) msg.textContent = data.error || 'Login failed';
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      if (msg) msg.textContent = 'Network error. Is the backend running?';
+    }
   });
-
-  const result = await response.json();
-  console.log(result);
 });

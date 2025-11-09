@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "email": "asf@asg.com",
+    "passwordHash": "$2b$10$rEOWyYjXkzKsgF0ePXctOemxcxe4zLLm0gnFEBeb6INJhGGwIneI."
+  },
+  {
+    "id": 2,
+    "email": "number15@burgerking.com",
+    "passwordHash": "$2b$10$fw6/OIY7pLheA8vFqBnf3u34LEVsmbf8xin6fvaA368tkMOR8dCtS"
+  }
+]

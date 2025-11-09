@@ -65,11 +65,11 @@
         <a href="#" class="forgot">Forgotten?</a>
 
         <button class="btn btn-green" type="submit">Sign in</button>
+        <p id="signin-msg" class="msg"></p>
       </div>
-
-      <p id="signin-msg" class="msg"></p>
     </form>
   </div>
+
 
 
   <!-- =========================================================
@@ -88,11 +88,17 @@
   </main>
 
 
-  <!-- =========================================================
+   <!-- =========================================================
        FOOTER
        ========================================================= -->
   <footer class="footer">
-    <span>© Questloggd</span>
+    <div class="footer-content">
+      <p>© 2025 Questloggd — Powered by 
+        <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+      </p>
+      <button class="btn btn-green contact-btn"
+              onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+    </div>
   </footer>
 
   <!-- JS (MUST BE AT THE BOTTOM) -->
