@@ -45,6 +45,28 @@ button{ font:inherit; cursor:pointer; }
 .logo{ width:28px; height:28px; border-radius:6px; object-fit:cover; background:#000; }
 .wordmark{ font-weight:700; letter-spacing:.5px; text-transform:uppercase; opacity:.9; }
 
+.topbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space between logo and wordmark */
+}
+
+.topbar .brand .logo {
+  display: block;
+  height: 48px;        /* desired visible height */
+  max-height: 56px;    /* never grow past this */
+  width: auto;         /* preserve aspect ratio */
+  object-fit: contain;
+}
+
+/* slightly larger on wide screens */
+@media (min-width: 900px) {
+  .topbar .brand .logo {
+    height: 56px;
+    max-height: 64px;
+  }
+}
+
 .navlinks{ display:flex; align-items:center; gap:12px; }
 .link{ opacity:.9; }
 .link:hover{ opacity:1; text-decoration:underline; }
