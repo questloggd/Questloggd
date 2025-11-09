@@ -1,3 +1,12 @@
+/**
+ * Clean, single-file Express server for Questloggd backend.
+ * Save this file, then run from backend folder:
+ *   cd C:\Users\Pc\Documents\Questloggd\backend
+ *   node server.js
+ *
+ * Optional: Uncomment mongoose or fetch if you plan to use them.
+ */
+
 console.log("================");
 console.log("SCRIPT STARTING");
 console.log("================");
@@ -5,89 +14,120 @@ console.log("================");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const fetch = require("node-fetch");
-const path = require("path"); 
+const path = require("path");
 
-// Immediate console output to verify script is running
-console.log("Script started");
+// Optional — only enable if you actually need them
+// const mongoose = require("mongoose");
+// const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-// Enhanced debugging
-console.log("Starting server initialization...");
-
-// Load environment variables (if .env exists)
 dotenv.config();
-console.log("Environment variables loaded");
 
 const app = express();
-console.log("Express app created");
+const PORT = process.env.PORT || 3000;
+
+console.log("Starting server initialization...");
+console.log(`Port selected: ${PORT}`);
+
+// Basic request logger
+app.use((req, res, next) => {
+  console.log(new Date().toISOString(), req.method, req.url);
+  next();
+});
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const path = require("path");
+// Serve frontend static files
+const frontendDir = path.join(__dirname, "..", "frontend");
+app.use(express.static(frontendDir));
 
-app.use(express.static(path.join(__dirname, "..", "frontend")));
-
+// Example auth endpoints (placeholders)
 app.post("/auth/login", (req, res) => {
-  const { email, password } = req.body;
+  console.log("/auth/login called with body:", req.body);
+  res.status(501).json({ error: "Not implemented: /auth/login" });
+});
 
-  console.log("Received login request");
-  console.log("Email:", email);
-  console.log("Password:", password);
+app.post("/auth/signup", (req, res) => {
+  console.log("/auth/signup called with body:", req.body);
+  res.status(501).json({ error: "Not implemented: /auth/signup" });
+});
 
-  res.json({
-    success: true,
-    message: "Login successful",
-    user: { email }
+// Health check
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString() });
+});
+
+// Serve index.html for root
+app.get("/", (req, res) => {
+  const indexPath = path.join(frontendDir, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.warn("index.html not found, sending text fallback");
+      res.type("text").send("Backend is running!");
+    }
   });
 });
 
-
-app.use(express.static(path.join(__dirname, "..", "frontend")));
-
-//  send index.html at the root instead of plain text
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
+// Catch-all for SPA (exclude API and special routes)
+app.get(/^\/(?!api|auth|__routes).*/, (req, res) => {
+  const indexPath = path.join(frontendDir, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) res.status(404).send("Not found");
+  });
 });
 
-// // Simple test route
-// app.get("/", (req, res) => {
-//   console.log("Received request on root route");
-//   res.send("Backend is running successfully!");
-// });
-
-// LOGIN ROUTE (captures username/email + password)
-app.post("/auth/login", (req, res) => {
-  console.log("Received login request!");
-
-  // Extract data from frontend
-  const { email, password } = req.body;
-
-  console.log("Email received:", email);
-  console.log("Password received:", password);
-
-  // Send a response back to frontend
-  res.json({ message: "Login data received", email });
+// Debug route to list registered routes
+app.get("/__routes", (req, res) => {
+  const routes = [];
+  app._router.stack.forEach((layer) => {
+    if (layer.route && layer.route.path) {
+      const methods = Object.keys(layer.route.methods)
+        .join(",")
+        .toUpperCase();
+      routes.push({ path: layer.route.path, methods });
+    }
+  });
+  res.json({ routes });
 });
 
+// 404 handler
+app.use((req, res) => {
+  console.warn("NO ROUTE for", req.method, req.url);
+  res.status(404).send(`Not found: ${req.method} ${req.url}`);
+});
 
-const PORT = process.env.PORT || 3000;
-console.log(`Port selected: ${PORT}`);
-
-// Start the server
-app.listen(PORT, () => {
+// Start server
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-}).on('error', (error) => {
-  console.error('Server failed to start:', error);
 });
 
-// Error handling
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+server.on("error", (err) => {
+  console.error("Server error:", err);
 });
 
-// Additional error handling
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+// Graceful shutdown
+const shutdown = (signal) => {
+  console.log(`Received ${signal}, shutting down...`);
+  server.close(() => {
+    console.log("Server closed");
+    process.exit(0);
+  });
+
+  // Force exit after timeout
+  setTimeout(() => {
+    console.warn("Forcing exit");
+    process.exit(1);
+  }, 5000).unref();
+};
+
+process.on("SIGINT", () => shutdown("SIGINT"));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
 });
