@@ -11,3 +11,92 @@
   <a href="signup.html">Sign Up</a>
 </body>
 </html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questloggd</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- =========================================================
+       TOP NAVBAR
+       ========================================================= -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo.png" alt="Questloggd" class="logo" />
+      <span class="wordmark">Questloggd</span>
+    </div>
+
+    <nav class="navlinks">
+      <a href="#" id="signin-toggle" class="link">Sign in</a>
+      <a href="#" id="browse" class="link">Browse</a>
+      <a href="signup.html" class="btn btn-green">Get started — it’s free!</a>
+    </nav>
+  </header>
+
+
+  <!-- =========================================================
+       SIGN-IN DROPDOWN PANEL
+       ========================================================= -->
+  <div id="signin-panel" class="signin-panel hidden" aria-hidden="true">
+    <form id="signinForm" class="signin-form">
+
+      <!-- Input fields -->
+      <div class="inputs">
+        <label for="si-username" class="sr-only">Username or Email</label>
+        <input id="si-username" type="text" placeholder="Username or Email" required />
+
+        <label for="si-password" class="sr-only">Password</label>
+        <input id="si-password" type="password" placeholder="Password" required />
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <label class="remember">
+          <input type="checkbox" id="si-remember" />
+          <span>Remember me</span>
+        </label>
+
+        <a href="#" class="forgot">Forgotten?</a>
+
+        <button class="btn btn-green" type="submit">Sign in</button>
+      </div>
+
+      <p id="signin-msg" class="msg"></p>
+    </form>
+  </div>
+
+
+  <!-- =========================================================
+       HERO SECTION
+       ========================================================= -->
+  <main class="hero">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">Track games you’ve played.</h1>
+      <h1 class="hero-title">Save those you want to play.</h1>
+      <h1 class="hero-title">Tell your friends what’s good.</h1>
+
+      <a href="signup.html" class="btn btn-green btn-cta">Get started — it’s free!</a>
+    </div>
+  </main>
+
+
+  <!-- =========================================================
+       FOOTER
+       ========================================================= -->
+  <footer class="footer">
+    <span>© Questloggd</span>
+  </footer>
+
+  <!-- JS (MUST BE AT THE BOTTOM) -->
+  <script src="login-modal.js"></script>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const fetch = require("node-fetch");
+const path = require("path"); 
 
 // Immediate console output to verify script is running
 console.log("Script started");
@@ -28,6 +29,24 @@ const path = require("path");
 
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 
+app.post("/auth/login", (req, res) => {
+  const { email, password } = req.body;
+
+  console.log("Received login request");
+  console.log("Email:", email);
+  console.log("Password:", password);
+
+  res.json({
+    success: true,
+    message: "Login successful",
+    user: { email }
+  });
+});
+
+
+app.use(express.static(path.join(__dirname, "..", "frontend")));
+
+//  send index.html at the root instead of plain text
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "frontend", "index.html"));
 });
