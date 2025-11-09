@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Questloggd - Discover Games</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       background-color: #121212;
@@ -139,14 +140,19 @@
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <a href="quest_user.html">Profile</a>
-      <a href="#">Lists</a>
-      <a href="quest_collection.html">Games</a>
-      <a href="#">Friends</a>
-      <a href="#">Settings</a>
+  <header class="topbar">
+    <div class="brand">
+      <img src="logo.png" alt="Questloggd" class="logo" />
+      <span class="wordmark">Questloggd</span>
     </div>
+
+    <nav class="navlinks">
+      <a href="quest_user.html" class="link">Profile</a>
+      <a href="#" class="link">Lists</a>
+      <a href="quest_collection.html" class="link">Games</a>
+      <a href="#" class="link">Friends</a>
+      <a href="signup.html" class="btn btn-green">Get started — it’s free!</a>
+    </nav>
   </header>
 
   <div class="banner">
@@ -207,6 +213,10 @@
       <div class="game-card"><img src="images/game27.jpg"><div class="game-title">Black Myth: Wukong</div></div>
     </div>
   </div>
+
+  <footer class="footer">
+    <span>© Questloggd</span>
+  </footer>
 
   <script>
     function scrollRow(rowId, direction) {
