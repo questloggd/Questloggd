@@ -71,6 +71,7 @@ if (form){
         msg.textContent = data?.message || "Invalid credentials.";
       }
 
+
     }catch(err){
       console.log(err);
       msg.textContent = "Network error. Is the backend running?";
