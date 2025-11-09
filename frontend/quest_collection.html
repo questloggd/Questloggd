@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questloggd - Game Collection</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2e005e;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+
+    header a:hover {
+      color: #ff69b4;
+    }
+
+    .banner {
+      background-color: #1a1a1a;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+    }
+
+    .banner-content {
+      background-color: #2a2a2a;
+      padding: 20px 60px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      flex-grow: 1;
+      text-align: center;
+      margin-right: 30px;
+    }
+
+    .banner-content h1 {
+      color: white;
+      font-size: 2.2em;
+      margin: 0;
+    }
+
+    .discover-btn {
+      background-color: #2e005e;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+
+    .discover-btn:hover {
+      background-color: #ff69b4;
+    }
+
+    .collection-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background-color: #1a1a1a;
+      border-bottom: 2px solid #2e005e;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .username {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      padding: 15px 40px;
+      background-color: #1a1a1a;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .filter-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .all { background-color: #777; }
+    .pc { background-color: #ff69b4; }
+    .playstation { background-color: #0070f3; }
+    .xbox { background-color: #107c10; }
+    .switch { background-color: #e60012; }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 20px 40px;
+    }
+
+    .game-card {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .game-title {
+      padding: 10px;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <a href="quest_user.html">Profile</a>
+      <a href="#">Lists</a>
+      <a href="quest_collection.html">Games</a>
+      <a href="#">Friends</a>
+      <a href="#">Settings</a>
+    </div>
+  </header>
+
+  <div class="banner">
+    <div class="banner-content">
+      <h1>My Game Collection</h1>
+    </div>
+    <button class="discover-btn" onclick="window.location.href='discover_games.html'">Discover Games</button>
+  </div>
+
+  <div class="collection-header">
+    <div class="profile-info">
+      <img src="images/profile.jpg" alt="Profile Picture">
+      <div class="username">Username’s Collection</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-buttons">
+      <button class="filter-btn all" onclick="filterGames('all')">All</button>
+      <button class="filter-btn pc" onclick="filterGames('pc')">PC</button>
+      <button class="filter-btn playstation" onclick="filterGames('playstation')">PlayStation</button>
+      <button class="filter-btn xbox" onclick="filterGames('xbox')">Xbox</button>
+      <button class="filter-btn switch" onclick="filterGames('switch')">Switch</button>
+    </div>
+  </div>
+
+  <div class="game-grid" id="gameGrid">
+    <!-- 20 Placeholder Games -->
+    <div class="game-card pc"><img src="images/game1.jpg" alt=""><div class="game-title">Overwatch 2</div></div>
+    <div class="game-card playstation"><img src="images/game2.jpg" alt=""><div class="game-title">Marvel Rivals</div></div>
+    <div class="game-card xbox"><img src="images/game3.jpg" alt=""><div class="game-title">Battlefield 6</div></div>
+    <div class="game-card switch"><img src="images/game4.jpg" alt=""><div class="game-title">Risk of Rain 2</div></div>
+    <div class="game-card pc"><img src="images/carousel1.jpg" alt=""><div class="game-title">Pokemon: Black</div></div>
+    <div class="game-card playstation"><img src="images/carousel2.jpg" alt=""><div class="game-title">Tekken 8</div></div>
+    <div class="game-card xbox"><img src="images/carousel3.jpg" alt=""><div class="game-title">Fortnite</div></div>
+    <div class="game-card switch"><img src="images/carousel4.jpg" alt=""><div class="game-title">Call of Duty: Infinite Warfare</div></div>
+    <div class="game-card pc"><img src="images/carousel5.jpg" alt=""><div class="game-title">Among Us</div></div>
+    <div class="game-card playstation"><img src="images/carousel6.jpg" alt=""><div class="game-title">Bloodborne</div></div>
+    <div class="game-card xbox"><img src="images/gameA_small.jpg" alt=""><div class="game-title">Silk Song</div></div>
+    <div class="game-card switch"><img src="images/gameB_small.jpg" alt=""><div class="game-title">The Wolf Among Us</div></div>
+    <div class="game-card pc"><img src="images/gameC_small.jpg" alt=""><div class="game-title">The Binding of Isaac</div></div>
+    <div class="game-card playstation"><img src="images/game5.jpg" alt=""><div class="game-title">Spiderman</div></div>
+    <div class="game-card xbox"><img src="images/game6.jpg" alt=""><div class="game-title">Skylander's Trap Team</div></div>
+    <div class="game-card switch"><img src="images/game7.jpg" alt=""><div class="game-title">Pokemon Violet</div></div>
+    <div class="game-card pc"><img src="images/game8.jpg" alt=""><div class="game-title">Hogwart's Legacy</div></div>
+    <div class="game-card playstation"><img src="images/game9.jpg" alt=""><div class="game-title">God of War Ragnorok</div></div>
+    <div class="game-card xbox"><img src="images/game10.jpg" alt=""><div class="game-title">Minecraft</div></div>
+    <div class="game-card switch"><img src="images/game11.jpg" alt=""><div class="game-title">Super Smash Bros Ultimate</div></div>
+  </div>
+
+  <script>
+    function filterGames(platform) {
+      const cards = document.querySelectorAll('.game-card');
+      cards.forEach(card => {
+        card.hidden = !(platform === 'all' || card.classList.contains(platform));
+      });
+    }
+  </script>
+  
+</body>
+</html>

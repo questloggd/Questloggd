@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questloggd - Discover Games</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #2e005e;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+
+    header a:hover {
+      color: #ff69b4;
+    }
+
+    .banner {
+      background-color: #1a1a1a;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .banner-content {
+      background-color: #2a2a2a;
+      padding: 20px 60px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .banner-content h1 {
+      color: white;
+      font-size: 2.2em;
+      margin: 0;
+    }
+
+    .discover-section {
+      padding: 30px 50px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      font-size: 1.5em;
+      margin: 0;
+    }
+
+    .scroll-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .scroll-btn {
+      background-color: #2e005e;
+      border: none;
+      color: white;
+      font-size: 1.2em;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .scroll-btn:hover {
+      background-color: #ff69b4;
+    }
+
+    .game-row {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .game-card {
+      flex: 0 0 auto;
+      width: 180px;
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .game-title {
+      padding: 10px;
+      font-size: 0.95em;
+    }
+
+    .game-row::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .game-row::-webkit-scrollbar-thumb {
+      background-color: #2e005e;
+      border-radius: 10px;
+    }
+
+    .game-row::-webkit-scrollbar-track {
+      background-color: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <a href="quest_user.html">Profile</a>
+      <a href="#">Lists</a>
+      <a href="quest_collection.html">Games</a>
+      <a href="#">Friends</a>
+      <a href="#">Settings</a>
+    </div>
+  </header>
+
+  <div class="banner">
+    <div class="banner-content">
+      <h1>Discover Queue</h1>
+    </div>
+  </div>
+
+  <div class="discover-section">
+    <!-- Section 1 -->
+    <div class="section-header">
+      <h2>Because You Liked...</h2>
+      <div class="scroll-buttons">
+        <button class="scroll-btn" onclick="scrollRow('likedRow', -1)">‹</button>
+        <button class="scroll-btn" onclick="scrollRow('likedRow', 1)">›</button>
+      </div>
+    </div>
+    <div class="game-row" id="likedRow">
+      <div class="game-card"><img src="images/game1.jpg"><div class="game-title">Overwatch 2</div></div>
+      <div class="game-card"><img src="images/game2.jpg"><div class="game-title">Apex Legends</div></div>
+      <div class="game-card"><img src="images/game3.jpg"><div class="game-title">Valorant</div></div>
+      <div class="game-card"><img src="images/game4.jpg"><div class="game-title">Call of Duty</div></div>
+      <div class="game-card"><img src="images/game5.jpg"><div class="game-title">Fortnite</div></div>
+      <div class="game-card"><img src="images/game6.jpg"><div class="game-title">Paladins</div></div>
+      <div class="game-card"><img src="images/game7.jpg"><div class="game-title">Destiny 2</div></div>
+      <div class="game-card"><img src="images/game8.jpg"><div class="game-title">CS:GO 2</div></div>
+    </div>
+  </div>
+
+  <div class="discover-section">
+    <!-- Section 2 -->
+    <div class="section-header">
+      <h2>More in This Genre...</h2>
+      <div class="scroll-buttons">
+        <button class="scroll-btn" onclick="scrollRow('genreRow', -1)">‹</button>
+        <button class="scroll-btn" onclick="scrollRow('genreRow', 1)">›</button>
+      </div>
+    </div>
+    <div class="game-row" id="genreRow">
+      <div class="game-card"><img src="images/game9.jpg"><div class="game-title">God of War Ragnorok</div></div>
+      <div class="game-card"><img src="images/game10.jpg"><div class="game-title">Minecraft</div></div>
+      <div class="game-card"><img src="images/game11.jpg"><div class="game-title">Super Smash Bros Ultimate</div></div>
+      <div class="game-card"><img src="images/game12.jpg"><div class="game-title">Sekiro</div></div>
+      <div class="game-card"><img src="images/game13.jpg"><div class="game-title">Nioh 2</div></div>
+      <div class="game-card"><img src="images/game14.jpg"><div class="game-title">Lords of the Fallen</div></div>
+      <div class="game-card"><img src="images/game15.jpg"><div class="game-title">Mortal Shell</div></div>
+      <div class="game-card"><img src="images/game16.jpg"><div class="game-title">Remnant 2</div></div>
+      <div class="game-card"><img src="images/game17.jpeg"><div class="game-title">Wo Long: Fallen Dynasty</div></div>
+      <div class="game-card"><img src="images/game18.png"><div class="game-title">Code Vein</div></div>
+      <div class="game-card"><img src="images/game19.jpg"><div class="game-title">Hollow Knight</div></div>
+      <div class="game-card"><img src="images/game20.jpg"><div class="game-title">Blasphemous 2</div></div>
+      <div class="game-card"><img src="images/game21.jpg"><div class="game-title">Salt and Sanctuary</div></div>
+      <div class="game-card"><img src="images/game22.jpg"><div class="game-title">Ashen</div></div>
+      <div class="game-card"><img src="images/game23.jpg"><div class="game-title">Thymesia</div></div>
+      <div class="game-card"><img src="images/game24.jpg"><div class="game-title">Lies of P</div></div>
+      <div class="game-card"><img src="images/game25.jpg"><div class="game-title">The Surge 2</div></div>
+      <div class="game-card"><img src="images/game26.jpg"><div class="game-title">Steelrising</div></div>
+      <div class="game-card"><img src="images/game27.jpg"><div class="game-title">Black Myth: Wukong</div></div>
+    </div>
+  </div>
+
+  <script>
+    function scrollRow(rowId, direction) {
+      const row = document.getElementById(rowId);
+      const scrollAmount = 300;
+      row.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
