@@ -8,5 +8,10 @@
     "id": 2,
     "email": "number15@burgerking.com",
     "passwordHash": "$2b$10$fw6/OIY7pLheA8vFqBnf3u34LEVsmbf8xin6fvaA368tkMOR8dCtS"
+  },
+  {
+    "id": 3,
+    "email": "hi@hi.com",
+    "passwordHash": "$2b$10$5uPel.XkHdyi7s88h8pgXO.xAg/AquDvUVcBel71iQN8y69IuOkgu"
   }
 ]
