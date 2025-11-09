@@ -65,7 +65,7 @@ if (form){
       if (res.ok && data.success) {
         msg.textContent = "Signed in! Redirecting...";
         setTimeout(() => {
-          window.location.href = "profile.html";
+          window.location.href = "quest_user.html";
         }, 800);
       } else {
         msg.textContent = data?.message || "Invalid credentials.";
