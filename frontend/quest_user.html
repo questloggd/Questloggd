@@ -232,7 +232,7 @@
             display: block;
         }
 
-        /* Recent reviews with game image */
+        /* Recent reviews section */
         .recent-reviews {
             background-color: #1a1a1a;
             border-radius: 10px;
@@ -260,11 +260,9 @@
             flex: 1;
         }
 
-        /* Hide carousel scrollbar */
         .game-carousel::-webkit-scrollbar {
             display: none;
         }
-
     </style>
 </head>
 <body>
@@ -325,6 +323,12 @@
 
         <!-- Right Main Content -->
         <div class="main-content">
+
+            <!-- ⭐ ADDED: Log Game Button -->
+            <button id="log-open" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
+                Log a Game
+            </button>
+
             <!-- Favourite Games -->
             <div>
                 <h2 class="section-title">Favourite Games</h2>
@@ -396,46 +400,106 @@
         </div>
     </footer>
 
+    <!-- ============================
+        LOG SEARCH MODAL
+    ============================ -->
+    <div id="log-overlay" class="hidden" aria-hidden="true">
+    <div id="log-modal">
+        <div id="log-top">
+        <h2>Search Game</h2>
+        <span id="log-close" style="cursor:pointer;">×</span>
+        </div>
+
+        <input 
+        id="log-search"
+        type="text"
+        placeholder="Search games..."
+        autocomplete="off"
+        >
+
+        <div id="log-results"></div>
+    </div>
+    </div>
+
+    <!-- ============================
+        REVIEW MODAL
+    ============================ -->
+    <div id="review-overlay" class="hidden" aria-hidden="true">
+    <div id="review-modal">
+
+        <div id="rev-top">
+        <h2>Log Game Review</h2>
+        <span id="rev-close" style="cursor:pointer;">×</span>
+        </div>
+
+        <span id="rev-back">← Back to Search</span>
+
+        <img id="rev-cover" src="" alt="Game Cover">
+
+        <div id="rev-name"></div>
+        <div id="rev-year"></div>
+
+        <div id="rev-stars">☆☆☆☆☆</div>
+
+        <label>
+        <input type="checkbox" id="rev-date-enabled" checked>
+        Include date
+        </label>
+
+        <input type="date" id="rev-date">
+
+        <input 
+        id="rev-tags"
+        type="text"
+        placeholder="Tags (comma separated)"
+        >
+
+        <textarea 
+        id="rev-text"
+        placeholder="Write your review..."
+        ></textarea>
+
+        <button id="rev-save" class="btn btn-green">Save</button>
+        <div id="rev-msg"></div>
+    </div>
+    </div>
+
+    <!-- ⭐ Include the log.js modal script -->
+    <script src="log.js"></script>
+
     <script>
     async function checkAuth() {
-    try {
-        const response = await fetch('http://localhost:3000/api/check-auth', {
-        credentials: 'include'
-        });
-        const data = await response.json();
-        
-        if (!data.authenticated) {
-        window.location.href = '/login.html';
+        try {
+            const response = await fetch('http://localhost:3000/api/check-auth', {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            
+            if (!data.authenticated) {
+                window.location.href = '/login.html';
+            }
+        } catch (err) {
+            console.error('Auth check failed:', err);
+            window.location.href = '/login.html';
         }
-    } catch (err) {
-        console.error('Auth check failed:', err);
-        window.location.href = '/login.html';
-    }
     }
 
-    // Call on page load
     checkAuth();
 
-        const carousel = document.getElementById('carousel');
-        const container = carousel.closest('.game-carousel-container');
+    const carousel = document.getElementById('carousel');
+    const container = carousel.closest('.game-carousel-container');
 
-        // Duplicate carousel items for seamless scrolling
-        carousel.innerHTML += carousel.innerHTML;
+    carousel.innerHTML += carousel.innerHTML;
 
-        let offset = 0;
+    let offset = 0;
 
-        function slideCarousel() {
-            offset += 1; // scroll speed
+    function slideCarousel() {
+        offset += 1;
+        if (offset >= carousel.scrollWidth / 2) offset = 0;
+        carousel.style.transform = `translateX(-${offset}px)`;
+    }
 
-            // Reset offset when it has scrolled one full set
-            if (offset >= carousel.scrollWidth / 2) {
-                offset = 0;
-            }
-
-            carousel.style.transform = `translateX(-${offset}px)`;
-        }
-
-        setInterval(slideCarousel, 20);
+    setInterval(slideCarousel, 20);
     </script>
 </body>
 </html>

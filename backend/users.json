@@ -3,5 +3,10 @@
     "id": 1,
     "email": "asf@asg.com",
     "passwordHash": "$2b$10$rEOWyYjXkzKsgF0ePXctOemxcxe4zLLm0gnFEBeb6INJhGGwIneI."
+  },
+  {
+    "id": 2,
+    "email": "e@gmail.com",
+    "passwordHash": "$2b$10$mFDBh1Xocrg9Kq5e2ebp5eVbR47X4yE1saF.ozi9anb4Zh7O5kYIa"
   }
 ]

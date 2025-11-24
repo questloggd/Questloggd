@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: (origin, cb) => cb(null, true), // dev: allow all origins
+    origin: (origin, cb) => cb(null, true),
     credentials: true,
   })
 );
@@ -50,7 +50,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false, // true in production (HTTPS)
+      secure: false,
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     },
@@ -89,14 +89,13 @@ function findUserByEmail(email) {
 
 // ====== Routes ======
 
-// Signup: POST /api/signup
+// Signup
 app.post("/api/signup", async (req, res) => {
   console.log("Signup request received:", req.body);
 
   const { email, password } = req.body;
-  if (!email || !password) {
+  if (!email || !password)
     return res.status(400).json({ error: "Missing email or password" });
-  }
 
   try {
     const users = loadUsers();
@@ -127,7 +126,7 @@ app.post("/api/signup", async (req, res) => {
   }
 });
 
-// Login: POST /api/login
+// Login
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password)
@@ -165,7 +164,7 @@ app.get("/health", (req, res) =>
   res.json({ status: "ok", time: new Date().toISOString() })
 );
 
-// Route listing (for debugging)
+// Route listing
 app.get("/__routes", (req, res) => {
   const routes = [];
   app._router.stack.forEach((layer) => {
@@ -183,7 +182,6 @@ app.get("/__routes", (req, res) => {
 const frontendDir = path.join(__dirname, "..", "frontend");
 app.use(express.static(frontendDir));
 
-// Root route
 app.get("/", (req, res) => {
   const indexPath = path.join(frontendDir, "index.html");
   res.sendFile(indexPath, (err) => {
@@ -191,7 +189,59 @@ app.get("/", (req, res) => {
   });
 });
 
-// 404
+// ===================================================================
+// ⭐ ADDED: RAWG Proxy Search Route
+// ===================================================================
+app.get("/games/search", async (req, res) => {
+  try {
+    const q = (req.query.q || "").trim();
+    if (!q) return res.json([]);
+
+    if (!process.env.RAWG_KEY) {
+      console.error("Missing RAWG_KEY in .env");
+      return res.status(500).json({ error: "RAWG key not configured" });
+    }
+
+    const url = `https://api.rawg.io/api/games?search=${encodeURIComponent(
+      q
+    )}&page_size=8&key=${process.env.RAWG_KEY}`;
+
+    console.log("RAWG URL:", url);
+
+    const r = await fetch(url);
+    if (!r.ok) {
+      const text = await r.text();
+      console.error("RAWG error:", r.status, text);
+      return res.status(502).json({ error: "RAWG request failed" });
+    }
+
+    const data = await r.json();
+
+    const out = (data.results || []).map((g) => ({
+      id: g.id,
+      name: g.name,
+      year: (g.released || "").slice(0, 4),
+      image: g.background_image,
+    }));
+
+    res.json(out);
+  } catch (err) {
+    console.error("Search route failed:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ===================================================================
+// ⭐ ADDED: Log Create Route
+// ===================================================================
+app.post("/logs", (req, res) => {
+  console.log("LOG ENTRY:", req.body);
+  res.json({ ok: true, id: Date.now(), ...req.body });
+});
+
+// ===================================================================
+// 404 HANDLER (KEEP LAST)
+// ===================================================================
 app.use((req, res) => {
   console.warn("NO ROUTE for", req.method, req.url);
   res.status(404).send(`Not found: ${req.method} ${req.url}`);
