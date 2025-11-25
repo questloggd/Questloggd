@@ -114,34 +114,17 @@
       flex-wrap: wrap;
     }
 
-    .filter-btn {
-      border: none;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      transition: transform 0.2s, background 0.3s;
-    }
-
-    .filter-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .all { background-color: #777; }
-    .pc { background-color: #ff69b4; }
-    .playstation { background-color: #0070f3; }
-    .xbox { background-color: #107c10; }
-    .switch { background-color: #e60012; }
-
     .game-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, 150px);
+      justify-content: center;
       gap: 15px;
       padding: 20px 40px;
     }
 
     .game-card {
+      width: 150px;
+      height: 270px;
       background-color: #1a1a1a;
       border-radius: 10px;
       overflow: hidden;
@@ -160,8 +143,13 @@
     }
 
     .game-title {
-      padding: 10px;
+      padding: 5px 10px;
       font-size: 0.95em;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
   </style>
 </head>
@@ -169,7 +157,7 @@
 
   <header class="topbar">
     <div class="brand">
-      <img src="logo.png" alt="Questloggd" class="logo" />
+      <img src="logo.png" alt="" class="logo" />
       <span class="wordmark">Questloggd</span>
     </div>
 
@@ -196,38 +184,66 @@
     </div>
   </div>
 
+  <!-- Search + Filters + Sort -->
   <div class="filter-bar">
     <div class="filter-buttons">
-      <button class="filter-btn all" onclick="filterGames('all')">All</button>
-      <button class="filter-btn pc" onclick="filterGames('pc')">PC</button>
-      <button class="filter-btn playstation" onclick="filterGames('playstation')">PlayStation</button>
-      <button class="filter-btn xbox" onclick="filterGames('xbox')">Xbox</button>
-      <button class="filter-btn switch" onclick="filterGames('switch')">Switch</button>
+      <input type="text" id="searchInput" placeholder="Search games..." style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px; width:200px;">
+      
+      <select id="genreFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+        <option value="all">All Genres</option>
+        <option value="Action">Action</option>
+        <option value="Adventure">Adventure</option>
+        <option value="RPG">RPG</option>
+        <option value="Shooter">Shooter</option>
+        <option value="Strategy">Strategy</option>
+      </select>
+
+      <select id="yearFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+        <option value="all">All Years</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+      </select>
+
+      <select id="platformFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+        <option value="all">All Platforms</option>
+        <option value="pc">PC</option>
+        <option value="playstation">PlayStation</option>
+        <option value="xbox">Xbox</option>
+        <option value="switch">Switch</option>
+      </select>
+
+      <select id="sortFilter" style="padding:8px 12px; border-radius:20px; border:none;">
+        <option value="default">Sort By</option>
+        <option value="az">A-Z</option>
+        <option value="popularity">Popularity</option>
+      </select>
     </div>
   </div>
 
   <div class="game-grid" id="gameGrid">
-    <!-- 20 Placeholder Games -->
-    <div class="game-card pc"><img src="images/game1.jpg" alt=""><div class="game-title">Overwatch 2</div></div>
-    <div class="game-card playstation"><img src="images/game2.jpg" alt=""><div class="game-title">Marvel Rivals</div></div>
-    <div class="game-card xbox"><img src="images/game3.jpg" alt=""><div class="game-title">Battlefield 6</div></div>
-    <div class="game-card switch"><img src="images/game4.jpg" alt=""><div class="game-title">Risk of Rain 2</div></div>
-    <div class="game-card pc"><img src="images/carousel1.jpg" alt=""><div class="game-title">Pokemon: Black</div></div>
-    <div class="game-card playstation"><img src="images/carousel2.jpg" alt=""><div class="game-title">Tekken 8</div></div>
-    <div class="game-card xbox"><img src="images/carousel3.jpg" alt=""><div class="game-title">Fortnite</div></div>
-    <div class="game-card switch"><img src="images/carousel4.jpg" alt=""><div class="game-title">Call of Duty: Infinite Warfare</div></div>
-    <div class="game-card pc"><img src="images/carousel5.jpg" alt=""><div class="game-title">Among Us</div></div>
-    <div class="game-card playstation"><img src="images/carousel6.jpg" alt=""><div class="game-title">Bloodborne</div></div>
-    <div class="game-card xbox"><img src="images/gameA_small.jpg" alt=""><div class="game-title">Silk Song</div></div>
-    <div class="game-card switch"><img src="images/gameB_small.jpg" alt=""><div class="game-title">The Wolf Among Us</div></div>
-    <div class="game-card pc"><img src="images/gameC_small.jpg" alt=""><div class="game-title">The Binding of Isaac</div></div>
-    <div class="game-card playstation"><img src="images/game5.jpg" alt=""><div class="game-title">Spiderman</div></div>
-    <div class="game-card xbox"><img src="images/game6.jpg" alt=""><div class="game-title">Skylander's Trap Team</div></div>
-    <div class="game-card switch"><img src="images/game7.jpg" alt=""><div class="game-title">Pokemon Violet</div></div>
-    <div class="game-card pc"><img src="images/game8.jpg" alt=""><div class="game-title">Hogwart's Legacy</div></div>
-    <div class="game-card playstation"><img src="images/game9.jpg" alt=""><div class="game-title">God of War Ragnorok</div></div>
-    <div class="game-card xbox"><img src="images/game10.jpg" alt=""><div class="game-title">Minecraft</div></div>
-    <div class="game-card switch"><img src="images/game11.jpg" alt=""><div class="game-title">Super Smash Bros Ultimate</div></div>
+    <!-- Example games with data attributes for filtering/sorting -->
+    <div class="game-card pc" data-genre="Shooter" data-year="2024" data-popularity="95"><img src="images/game1.jpg" alt=""><div class="game-title">Overwatch 2</div></div>
+    <div class="game-card playstation" data-genre="Action" data-year="2023" data-popularity="88"><img src="images/game2.jpg" alt=""><div class="game-title">Marvel Rivals</div></div>
+    <div class="game-card xbox" data-genre="Shooter" data-year="2022" data-popularity="75"><img src="images/game3.jpg" alt=""><div class="game-title">Battlefield 6</div></div>
+    <div class="game-card switch" data-genre="RPG" data-year="2021" data-popularity="80"><img src="images/game4.jpg" alt=""><div class="game-title">Risk of Rain 2</div></div>
+    <div class="game-card pc" data-genre="RPG" data-year="2022" data-popularity="90"><img src="images/carousel1.jpg" alt=""><div class="game-title">Pokemon: Black</div></div>
+    <div class="game-card playstation" data-genre="Action" data-year="2024" data-popularity="85"><img src="images/carousel2.jpg" alt=""><div class="game-title">Tekken 8</div></div>
+    <div class="game-card xbox" data-genre="Shooter" data-year="2023" data-popularity="92"><img src="images/carousel3.jpg" alt=""><div class="game-title">Fortnite</div></div>
+    <div class="game-card switch" data-genre="Shooter" data-year="2024" data-popularity="78"><img src="images/carousel4.jpg" alt=""><div class="game-title">Call of Duty: Infinite Warfare</div></div>
+    <div class="game-card pc" data-genre="Strategy" data-year="2021" data-popularity="60"><img src="images/carousel5.jpg" alt=""><div class="game-title">Among Us</div></div>
+    <div class="game-card playstation" data-genre="Action" data-year="2022" data-popularity="83"><img src="images/carousel6.jpg" alt=""><div class="game-title">Bloodborne</div></div>
+    <div class="game-card xbox" data-genre="RPG" data-year="2024" data-popularity="70"><img src="images/gameA_small.jpg" alt=""><div class="game-title">Silk Song</div></div>
+    <div class="game-card switch" data-genre="Adventure" data-year="2023" data-popularity="77"><img src="images/gameB_small.jpg" alt=""><div class="game-title">The Wolf Among Us</div></div>
+    <div class="game-card pc" data-genre="RPG" data-year="2022" data-popularity="82"><img src="images/gameC_small.jpg" alt=""><div class="game-title">The Binding of Isaac</div></div>
+    <div class="game-card playstation" data-genre="Action" data-year="2023" data-popularity="91"><img src="images/game5.jpg" alt=""><div class="game-title">Spiderman</div></div>
+    <div class="game-card xbox" data-genre="Adventure" data-year="2021" data-popularity="68"><img src="images/game6.jpg" alt=""><div class="game-title">Skylander's Trap Team</div></div>
+    <div class="game-card switch" data-genre="RPG" data-year="2024" data-popularity="87"><img src="images/game7.jpg" alt=""><div class="game-title">Pokemon Violet</div></div>
+    <div class="game-card pc" data-genre="RPG" data-year="2023" data-popularity="94"><img src="images/game8.jpg" alt=""><div class="game-title">Hogwart's Legacy</div></div>
+    <div class="game-card playstation" data-genre="Action" data-year="2024" data-popularity="96"><img src="images/game9.jpg" alt=""><div class="game-title">God of War Ragnorok</div></div>
+    <div class="game-card xbox" data-genre="Adventure" data-year="2022" data-popularity="90"><img src="images/game10.jpg" alt=""><div class="game-title">Minecraft</div></div>
+    <div class="game-card switch" data-genre="Fighting" data-year="2023" data-popularity="85"><img src="images/game11.jpg" alt=""><div class="game-title">Super Smash Bros Ultimate</div></div>
   </div>
 
   <footer class="footer">
@@ -237,13 +253,49 @@
   <script src="login-modal.js"></script>
 
   <script>
-    function filterGames(platform) {
-      const cards = document.querySelectorAll('.game-card');
-      cards.forEach(card => {
-        card.hidden = !(platform === 'all' || card.classList.contains(platform));
+    // Combined search + filter + sort
+    const searchInput = document.getElementById('searchInput');
+    const genreFilter = document.getElementById('genreFilter');
+    const yearFilter = document.getElementById('yearFilter');
+    const platformFilter = document.getElementById('platformFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const cards = Array.from(document.querySelectorAll('.game-card'));
+
+    function applyFilters() {
+      const searchText = searchInput.value.toLowerCase();
+      const genre = genreFilter.value;
+      const year = yearFilter.value;
+      const platform = platformFilter.value;
+      const sort = sortFilter.value;
+
+      let filtered = cards.filter(card => {
+        const title = card.querySelector('.game-title').textContent.toLowerCase();
+        const cardGenre = card.getAttribute('data-genre');
+        const cardYear = card.getAttribute('data-year');
+        const cardPlatform = Array.from(card.classList).find(c => ['pc','playstation','xbox','switch'].includes(c));
+
+        return (title.includes(searchText)) &&
+               (genre === 'all' || genre === cardGenre) &&
+               (year === 'all' || year === cardYear) &&
+               (platform === 'all' || platform === cardPlatform);
       });
+
+      if(sort === 'az') {
+        filtered.sort((a,b) => a.querySelector('.game-title').textContent.localeCompare(b.querySelector('.game-title').textContent));
+      } else if(sort === 'popularity') {
+        filtered.sort((a,b) => (b.getAttribute('data-popularity')||0) - (a.getAttribute('data-popularity')||0));
+      }
+
+      cards.forEach(card => card.style.display = 'none');
+      filtered.forEach(card => card.style.display = 'block');
     }
+
+    searchInput.addEventListener('input', applyFilters);
+    genreFilter.addEventListener('change', applyFilters);
+    yearFilter.addEventListener('change', applyFilters);
+    platformFilter.addEventListener('change', applyFilters);
+    sortFilter.addEventListener('change', applyFilters);
   </script>
-  
+
 </body>
 </html>
