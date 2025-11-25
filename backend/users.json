@@ -8,5 +8,10 @@
     "id": 2,
     "email": "e@gmail.com",
     "passwordHash": "$2b$10$mFDBh1Xocrg9Kq5e2ebp5eVbR47X4yE1saF.ozi9anb4Zh7O5kYIa"
+  },
+  {
+    "id": 3,
+    "email": "123@123.com",
+    "passwordHash": "$2b$10$KjmNONrQfFuvTcH4XiAFX.AITd8LeNeChMo5Qwrrc7VjHlBtu1gf6"
   }
 ]
