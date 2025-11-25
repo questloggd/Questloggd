@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questloggd - Daily Challenge</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+body { background-color: #121212; color: #fff; }
+
+/* Page Sections */
+.section {
+    background-color: #1a1a1a;
+    padding: 30px;
+    margin: 20px auto;
+    width: 80%;
+    border-radius: 12px;
+    text-align: center;
+}
+
+header { background-color: #2e005e; padding: 15px 30px; display: flex; align-items: center; gap: 30px; transition: background-color 0.3s; }
+header a { color: #fff; text-decoration: none; font-weight: bold; transition: color 0.2s; }
+header a:hover { color: #ff69b4; }
+
+/* Image */
+.section img {
+    width: 130px;
+    height: 130px;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+/* Tips */
+.tips p {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+/* Hangman Game */
+#hangman-area {
+    background-color: #1a1a1a;
+    width: 85%;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Hangman Drawing */
+#hangman-drawing {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    position: relative;
+    border: 3px solid white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.part {
+    position: absolute;
+    display: none;
+    background-color: white;
+}
+
+#head {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: 3px solid white;
+    top: 40px;
+    left: 122px;
+    background: none;
+}
+
+#body {
+    width: 4px;
+    height: 110px;
+    top: 95px;
+    left: 150px;
+}
+
+#left-arm, #right-arm {
+    width: 60px;
+    height: 4px;
+    top: 130px;
+}
+
+#left-arm { left: 90px; transform: rotate(-20deg); }
+#right-arm { left: 150px; transform: rotate(20deg); }
+
+#left-leg, #right-leg {
+    width: 4px;
+    height: 70px;
+    top: 200px;
+}
+
+#left-leg { left: 130px; transform: rotate(-18deg); }
+#right-leg { left: 170px; transform: rotate(18deg); }
+
+/* Word Display */
+#word-display {
+    font-size: 2.3em;
+    letter-spacing: 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Keyboard */
+#keyboard {
+    width: 80%;
+    margin: auto;
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: 10px;
+}
+
+.key {
+    padding: 14px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.key:hover {
+    background-color: #4caf50;
+}
+
+.key.disabled {
+    background-color: #444;
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* Win/Lose Message */
+#message {
+    margin-top: 25px;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+/* WIN POPUP */
+#win-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,255,150,0.25);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(6px);
+}
+
+.win-box {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid #00ff9d;
+    animation: pop 0.5s ease-out forwards;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.1); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* LOSE EFFECT */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-7px); }
+}
+
+.lose-shake {
+    animation: shake 0.5s ease-in-out;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER KEPT EXACTLY -->
+<header>
+<a href="#">Profile</a>
+<a href="#">Lists</a>
+<a href="quest_collection.html">Games</a>
+<a href="#">Friends</a>
+<a href="#">Settings</a>
+<a href="daily_challenge.html">Daily Challenge</a>
+</header>
+
+<!-- DAILY CHALLENGE TITLE -->
+<div class="section">
+    <h1>Today's Game is: <span style="color:#00ff9d;">Minecraft</span></h1>
+    <img src="images/game10.jpg" alt="Minecraft">
+
+    <h2 style="margin-top:20px;">Today's Challenge is: 
+        <span style="color:#ffcc00;">Hangman</span>
+    </h2>
+
+    <div class="tips">
+        <p>• This answer is a mob!</p>
+        <p>• This answer is iconic!</p>
+        <p>• Many would describe this answer as annoying!</p>
+    </div>
+</div>
+
+<!-- HANGMAN GAME AREA -->
+<div id="hangman-area">
+
+    <div id="hangman-drawing">
+        <div id="head" class="part"></div>
+        <div id="body" class="part"></div>
+        <div id="left-arm" class="part"></div>
+        <div id="right-arm" class="part"></div>
+        <div id="left-leg" class="part"></div>
+        <div id="right-leg" class="part"></div>
+    </div>
+
+    <div id="word-display"></div>
+
+    <div id="keyboard"></div>
+
+    <div id="message"></div>
+</div>
+
+<!-- WIN POPUP -->
+<div id="win-popup">
+    <div class="win-box">
+        <h1 style="color:#00ff9d;">🎉 YOU WIN!</h1>
+        <p style="margin-top:10px;">The mob was <b>CREEPER</b></p>
+    </div>
+</div>
+
+<script>
+// Sounds
+const soundCorrect = new Audio("correct.mp3");
+const soundWrong = new Audio("wrong.mp3");
+const soundWin = new Audio("win.mp3");
+const soundLose = new Audio("lose.mp3");
+
+// Answer
+const answer = "CREEPER";
+let guessed = [];
+let wrongGuesses = 0;
+
+const parts = ["head","body","left-arm","right-arm","left-leg","right-leg"];
+
+// Update word display
+function updateWord() {
+    const display = answer.split("").map(letter =>
+        guessed.includes(letter) ? letter : "_"
+    ).join(" ");
+
+    document.getElementById("word-display").textContent = display;
+
+    if (!display.includes("_")) {
+        soundWin.play();
+        const winPopup = document.getElementById("win-popup");
+        winPopup.style.display = "flex";
+
+        disableKeyboard();
+
+        // AUTO-HIDE WIN POPUP AFTER 1.5 SECONDS
+        setTimeout(() => {
+            winPopup.style.display = "none";
+        }, 1500);
+    }
+}
+
+// Build keyboard
+function createKeyboard() {
+    const kb = document.getElementById("keyboard");
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+    letters.forEach(letter => {
+        const key = document.createElement("div");
+        key.classList.add("key");
+        key.textContent = letter;
+        key.onclick = () => handleGuess(letter, key);
+        kb.appendChild(key);
+    });
+}
+
+// Guess handling
+function handleGuess(letter, key) {
+    if (key.classList.contains("disabled")) return;
+    key.classList.add("disabled");
+
+    if (answer.includes(letter)) {
+        guessed.push(letter);
+        soundCorrect.play();
+        updateWord();
+    } else {
+        soundWrong.play();
+        showNextPart();
+    }
+}
+
+// Hangman growth
+function showNextPart() {
+    if (wrongGuesses < parts.length) {
+        document.getElementById(parts[wrongGuesses]).style.display = "block";
+        wrongGuesses++;
+    }
+
+    if (wrongGuesses === parts.length) {
+        soundLose.play();
+
+        const msg = document.getElementById("message");
+        const hang = document.getElementById("hangman-drawing");
+
+        msg.textContent = "💀 YOU LOST! The answer was CREEPER.";
+        hang.classList.add("lose-shake");
+
+        disableKeyboard();
+
+        // AUTO-HIDE LOSE MESSAGE + REMOVE SHAKE AFTER 1.5s
+        setTimeout(() => {
+            msg.textContent = "";
+            hang.classList.remove("lose-shake");
+        }, 1500);
+    }
+}
+
+// Disable rest of letters
+function disableKeyboard() {
+    document.querySelectorAll(".key").forEach(key => key.classList.add("disabled"));
+}
+
+// Start
+updateWord();
+createKeyboard();
+</script>
+
+<!-- FOOTER KEPT AS-IS -->
+<footer class="footer">
+<div class="footer-content">
+<p>© 2025 Questloggd — Powered by <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a></p>
+<button class="btn btn-green contact-btn" onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+</div>
+</footer>
+
+</body>
+</html>
