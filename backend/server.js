@@ -18,7 +18,20 @@ const session = require("express-session");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const mongoose = require("mongoose");
+
 dotenv.config();
+console.log("Loaded MONGODB_URI:", process.env.MONGODB_URI);
+
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ Connected to MongoDB"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
+
+
 
 const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.SECRET_KEY || "dev-secret-change-me";
@@ -86,6 +99,27 @@ function findUserByEmail(email) {
   const users = loadUsers();
   return users.find((u) => u.email.toLowerCase() === email.toLowerCase());
 }
+
+// ====== Mongoose Schemas ======
+const GameSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  year: String,
+  image: String,
+});
+
+const LogSchema = new mongoose.Schema({
+  userId: Number,
+  gameId: Number,
+  gameName: String,
+  rating: Number,
+  review: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Game = mongoose.model("Game", GameSchema);
+const Log = mongoose.model("Log", LogSchema);
+
 
 // ====== Routes ======
 
@@ -192,52 +226,70 @@ app.get("/", (req, res) => {
 // ===================================================================
 // ⭐ ADDED: RAWG Proxy Search Route
 // ===================================================================
+
+// ✅ Cached RAWG search using your existing Game schema
 app.get("/games/search", async (req, res) => {
   try {
     const q = (req.query.q || "").trim();
     if (!q) return res.json([]);
 
+    // 1️⃣ Check if the game already exists in MongoDB
+    const existing = await Game.find({ name: new RegExp(q, "i") }).limit(8);
+    if (existing.length > 0) {
+      console.log("✅ Served from MongoDB cache");
+      return res.json(existing);
+    }
+
+    // 2️⃣ Otherwise fetch from RAWG
     if (!process.env.RAWG_KEY) {
       console.error("Missing RAWG_KEY in .env");
       return res.status(500).json({ error: "RAWG key not configured" });
     }
 
-    const url = `https://api.rawg.io/api/games?search=${encodeURIComponent(
-      q
-    )}&page_size=8&key=${process.env.RAWG_KEY}`;
+    const url = `https://api.rawg.io/api/games?search=${encodeURIComponent(q)}&page_size=8&key=${process.env.RAWG_KEY}`;
+    console.log("🌍 Fetching from RAWG:", url);
 
-    console.log("RAWG URL:", url);
+    const rawgResponse = await fetch(url);
+    const data = await rawgResponse.json();
 
-    const r = await fetch(url);
-    if (!r.ok) {
-      const text = await r.text();
-      console.error("RAWG error:", r.status, text);
-      return res.status(502).json({ error: "RAWG request failed" });
-    }
-
-    const data = await r.json();
-
-    const out = (data.results || []).map((g) => ({
+    const games = (data.results || []).map(g => ({
       id: g.id,
       name: g.name,
       year: (g.released || "").slice(0, 4),
-      image: g.background_image,
+      image: g.background_image
     }));
 
-    res.json(out);
+    // 3️⃣ Store in DB for caching
+    if (games.length > 0) {
+      await Game.insertMany(games, { ordered: false }).catch(() => {});
+      console.log("💾 Cached new games in MongoDB");
+    }
+
+    res.json(games);
   } catch (err) {
-    console.error("Search route failed:", err);
+    console.error("❌ Search route failed:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
+
+
 // ===================================================================
 // ⭐ ADDED: Log Create Route
 // ===================================================================
-app.post("/logs", (req, res) => {
-  console.log("LOG ENTRY:", req.body);
-  res.json({ ok: true, id: Date.now(), ...req.body });
+app.post("/logs", async (req, res) => {
+  try {
+    const { userId, gameId, gameName, rating, review } = req.body;
+    const log = new Log({ userId, gameId, gameName, rating, review });
+    await log.save();
+    console.log("📝 Log saved:", log);
+    res.json({ ok: true, log });
+  } catch (err) {
+    console.error("Failed to save log:", err);
+    res.status(500).json({ error: "Could not save log" });
+  }
 });
+
 
 // ===================================================================
 // 404 HANDLER (KEEP LAST)
