@@ -243,7 +243,7 @@ button { font: inherit; cursor: pointer; }
   width: 55px;
   height: 55px;
   border-radius: 6px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .log-meta {
@@ -299,13 +299,25 @@ button { font: inherit; cursor: pointer; }
 #rev-name { font-size: 22px; margin-bottom: 2px; }
 #rev-year { font-size: 14px; color: var(--muted); }
 
-#rev-stars {
-  font-size: 26px;
-  letter-spacing: 4px;
+#rev-stars-container {
+  display: flex;
+  justify-content: space-between; /* evenly space stars */
+  width: 100%;
   margin: 12px 0;
-  cursor: pointer;
+}
+
+.rev-star {
+  font-size: 28px;
   color: var(--accent);
+  cursor: pointer;
   user-select: none;
+  flex: 1; /* each star fills equal space */
+  text-align: center;
+  transition: transform 0.1s;
+}
+
+.rev-star:hover {
+  transform: scale(1.2);
 }
 
 #rev-date {

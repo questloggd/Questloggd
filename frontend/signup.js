@@ -19,6 +19,8 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (res.ok) {
+      // Save userId locally
+      localStorage.setItem('userId', data.user?.id || data.tokenPayload?.id || '');
       msg.textContent = "Signup successful! Redirecting...";
       setTimeout(() => {
         window.location.href = data.redirect || "/quest_user.html";

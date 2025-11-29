@@ -1,505 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questloggd - User Profile</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questloggd - User Profile</title>
 
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Reset */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
 
-        body {
-            background-color: #121212;
-            color: #f0f0f0;
-        }
+body {
+    background-color: #121212;
+    color: #f0f0f0;
+}
 
-        /* Header */
-        header {
-            background-color: #2e005e;
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
+/* Header */
+header {
+    background-color: #2e005e;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
 
-        header a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s;
-        }
+header a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
 
-        header a:hover {
-            color: #ff69b4;
-        }
+header a:hover {
+    color: #ff69b4;
+}
 
-        /* Main layout */
-        .container {
-            display: flex;
-            padding: 20px 30px;
-            gap: 20px;
-        }
+/* Main layout */
+.container {
+    display: flex;
+    padding: 20px 30px;
+    gap: 20px;
+}
 
-        /* Left sidebar */
-        .sidebar {
-            width: 25%;
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 20px;
-        }
+/* Left sidebar */
+.sidebar {
+    width: 25%;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+}
 
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            display: block;
-            object-fit: cover;
-        }
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: block;
+    object-fit: cover;
+}
 
-        .username {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
+.username {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
 
-        /* Level + EXP bar */
-        .level-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+/* Level + EXP bar */
+.level-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
 
-        .level-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            min-width: 20px;
-        }
+.level-number {
+    font-size: 1.5em;
+    font-weight: bold;
+    min-width: 20px;
+}
 
-        .exp-bar {
-            width: 100px;
-            height: 12px;
-            background-color: #2a2a2a;
-            border-radius: 6px;
-            overflow: hidden;
-        }
+.exp-bar {
+    width: 100px;
+    height: 12px;
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    overflow: hidden;
+}
 
-        .exp-progress {
-            height: 100%;
-            background-color: #ffcc00;
-            border-radius: 6px;
-        }
+.exp-progress {
+    height: 100%;
+    background-color: #ffcc00;
+    border-radius: 6px;
+}
 
-        .bio {
-            background-color: #2a2a2a;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            text-align: center;
-        }
+.bio {
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    text-align: center;
+}
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            color: #ccc;
-        }
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #ccc;
+}
 
-        .stats div {
-            text-align: center;
-        }
+.stats div {
+    text-align: center;
+}
 
-        /* Followers / Following moved to sidebar */
-        .sidebar .followers-following {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
+/* Followers / Following */
+.sidebar .followers-following {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
 
-        .sidebar .followers-following div {
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 10px;
-            flex: 1;
-            text-align: center;
-        }
+.sidebar .followers-following div {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 10px;
+    flex: 1;
+    text-align: center;
+}
 
-        .recent-activity {
-            margin-top: 20px;
-        }
+.recent-activity {
+    margin-top: 20px;
+}
 
-        .recent-activity h3 {
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
+.recent-activity h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
 
-        .activity-item {
-            background-color: #2a2a2a;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            font-size: 0.9em;
-        }
+.activity-item {
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
 
-        /* Right content */
-        .main-content {
-            width: 75%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+/* Right content */
+.main-content {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-        .section-title {
-            font-size: 1.3em;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
+.section-title {
+    font-size: 1.3em;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
 
-        /* Top 4 games */
-        .top-games {
-            display: flex;
-            gap: 15px;
-        }
+/* Top 4 games */
+.top-games {
+    display: flex;
+    gap: 15px;
+}
 
-        .game-card {
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 15px;
-            flex: 1;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
+.game-card {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
 
-        .game-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #ff69b4;
-        }
+.game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff69b4;
+}
 
-        .game-card img {
-            width: 100%;
-            height: 120px;
-            border-radius: 5px;
-            object-fit: fill;
-            margin-bottom: 10px;
-        }
+.game-card img {
+    width: 100%;
+    height: 120px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
 
-        .game-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+.game-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
-        .game-rating {
-            color: #ffcc00;
-        }
+.game-rating {
+    color: #ffcc00;
+}
 
-        /* Game carousel */
-        .game-carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
-            background-color: #1a1a1a;
-            padding: 15px;
-        }
+/* Game carousel */
+.game-carousel-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #1a1a1a;
+    padding: 15px;
+}
 
-        .game-carousel {
-            display: flex;
-            gap: 10px;
-        }
+.game-carousel {
+    display: flex;
+    gap: 10px;
+}
 
-        .carousel-item {
-            flex: 0 0 150px;
-            height: 150px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
+.carousel-item {
+    flex: 0 0 150px;
+    height: 150px;
+    border-radius: 5px;
+    overflow: hidden;
+}
 
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: fill;
-            display: block;
-        }
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 
-        /* Recent reviews section */
-        .recent-reviews {
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 15px;
-        }
+.game-carousel::-webkit-scrollbar {
+    display: none;
+}
 
-        .review-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #2a2a2a;
-            border-radius: 5px;
-        }
+/* Recent reviews section */
+.recent-reviews {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    padding: 15px;
+}
 
-        .review-game-img {
-            width: 50px;
-            height: 50px;
-            object-fit: fill;
-            border-radius: 5px;
-        }
+.review-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border-radius: 5px;
+}
 
-        .review-text {
-            flex: 1;
-        }
+.review-game-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
 
-        .game-carousel::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
+.review-text {
+    flex: 1;
+}
+</style>
 </head>
 <body>
-    <header>
-        <a href="#">Profile</a>
-        <a href="#">Lists</a>
-        <a href="quest_collection.html">Games</a>
-        <a href="#">Friends</a>
-        <a href="#">Settings</a>
-    </header>
+<header>
+    <a href="#">Profile</a>
+    <a href="#">Lists</a>
+    <a href="quest_collection.html">Games</a>
+    <a href="#">Friends</a>
+    <a href="#">Settings</a>
+</header>
 
-    <div class="container">
-        <!-- Left Sidebar -->
-        <div class="sidebar">
-            <img src="images/profile.jpg" alt="Profile Picture" class="profile-pic">
-            <div class="username">Username123</div>
+<div class="container">
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <img src="images/profile.jpg" alt="Profile Picture" class="profile-pic">
+        <div class="username" id="profile-username">Username</div>
 
-            <!-- Level + EXP bar -->
-            <div class="level-container">
-                <div class="level-number">12</div>
-                <div class="exp-bar">
-                    <div class="exp-progress" style="width: 70%;"></div>
-                </div>
-            </div>
-
-            <div class="bio">
-                Gamer. Reviewer. Explorer of virtual worlds. Love RPGs and indie games!
-            </div>
-
-            <div class="stats">
-                <div>
-                    <strong>45</strong><br>Games Played
-                </div>
-                <div>
-                    <strong>8</strong><br>Lists Created
-                </div>
-            </div>
-
-            <!-- Followers / Following -->
-            <div class="followers-following">
-                <div>
-                    <h4>Followers</h4>
-                    <p>123</p>
-                </div>
-                <div>
-                    <h4>Following</h4>
-                    <p>98</p>
-                </div>
-            </div>
-
-            <div class="recent-activity">
-                <h3>Recent Activity</h3>
-                <div class="activity-item">Played Game A</div>
-                <div class="activity-item">Reviewed Game B</div>
-                <div class="activity-item">Added Game C to wishlist</div>
+        <div class="level-container">
+            <div class="level-number" id="profile-level">0</div>
+            <div class="exp-bar">
+                <div class="exp-progress" id="profile-exp" style="width: 0%;"></div>
             </div>
         </div>
 
-        <!-- Right Main Content -->
-        <div class="main-content">
+        <div class="bio" id="profile-bio">Welcome to your profile!</div>
 
-            <!-- ⭐ ADDED: Log Game Button -->
-            <button id="log-open" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
-                Log a Game
-            </button>
-
-            <!-- Favourite Games -->
+        <div class="stats">
             <div>
-                <h2 class="section-title">Favourite Games</h2>
-                <div class="top-games">
-                    <div class="game-card">
-                        <img src="images/game1.jpg" alt="Game 1">
-                        <div class="game-name">Overwatch 2</div>
-                        <div class="game-rating">★ ★ ★ ★ ☆</div>
-                    </div>
-                    <div class="game-card">
-                        <img src="images/game2.jpg" alt="Game 2">
-                        <div class="game-name">Marvel Rivals</div>
-                        <div class="game-rating">★ ★ ★ ☆ ☆</div>
-                    </div>
-                    <div class="game-card">
-                        <img src="images/game3.jpg" alt="Game 3">
-                        <div class="game-name">Battlefield 6</div>
-                        <div class="game-rating">★ ★ ★ ★ ★</div>
-                    </div>
-                    <div class="game-card">
-                        <img src="images/game4.jpg" alt="Game 4">
-                        <div class="game-name">Risk of Rain 2</div>
-                        <div class="game-rating">★ ★ ☆ ☆ ☆</div>
-                    </div>
-                </div>
+                <strong id="games-played">0</strong><br>Games Played
             </div>
-
-            <!-- Recently Played Carousel -->
             <div>
-                <h2 class="section-title">Recently Played</h2>
-                <div class="game-carousel-container">
-                    <div class="game-carousel" id="carousel">
-                        <div class="carousel-item"><img src="images/carousel1.jpg" alt="Game 1"></div>
-                        <div class="carousel-item"><img src="images/carousel2.jpg" alt="Game 2"></div>
-                        <div class="carousel-item"><img src="images/carousel3.jpg" alt="Game 3"></div>
-                        <div class="carousel-item"><img src="images/carousel4.jpg" alt="Game 4"></div>
-                        <div class="carousel-item"><img src="images/carousel5.jpg" alt="Game 5"></div>
-                        <div class="carousel-item"><img src="images/carousel6.jpg" alt="Game 6"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Reviews -->
-            <div class="recent-reviews">
-                <h3>Recent Reviews</h3>
-                <div class="review-item">
-                    <img src="images/gameA_small.jpg" alt="Game A" class="review-game-img">
-                    <div class="review-text"><strong>Game A:</strong> Loved the graphics!</div>
-                </div>
-                <div class="review-item">
-                    <img src="images/gameB_small.jpg" alt="Game B" class="review-game-img">
-                    <div class="review-text"><strong>Game B:</strong> Gameplay was smooth.</div>
-                </div>
-                <div class="review-item">
-                    <img src="images/gameC_small.jpg" alt="Game C" class="review-game-img">
-                    <div class="review-text"><strong>Game C:</strong> Needs better controls.</div>
-                </div>
+                <strong id="lists-created">0</strong><br>Lists Created
             </div>
         </div>
-    </div>
 
-    <footer class="footer">
-        <div class="footer-content">
-        <p>© 2025 Questloggd — Powered by 
-            <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
-        </p>
-        <button class="btn btn-green contact-btn"
-                onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
-        </div>
-    </footer>
-
-    <!-- ============================
-        LOG SEARCH MODAL
-    ============================ -->
-    <div id="log-overlay" class="hidden" aria-hidden="true">
-    <div id="log-modal">
-        <div id="log-top">
-        <h2>Search Game</h2>
-        <span id="log-close" style="cursor:pointer;">×</span>
+        <div class="followers-following">
+            <div>
+                <h4>Followers</h4>
+                <p id="followers-count">0</p>
+            </div>
+            <div>
+                <h4>Following</h4>
+                <p id="following-count">0</p>
+            </div>
         </div>
 
-        <input 
-        id="log-search"
-        type="text"
-        placeholder="Search games..."
-        autocomplete="off"
-        >
-
-        <div id="log-results"></div>
-    </div>
+        <div class="recent-activity">
+            <h3>Recent Activity</h3>
+            <div id="recent-activity-items"></div>
+        </div>
     </div>
 
-    <!-- ============================
-        REVIEW MODAL
-    ============================ -->
-    <div id="review-overlay" class="hidden" aria-hidden="true">
-    <div id="review-modal">
+    <!-- Right Main Content -->
+    <div class="main-content">
+        <button id="log-open" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
+            Log a Game
+        </button>
 
-        <div id="rev-top">
-        <h2>Log Game Review</h2>
-        <span id="rev-close" style="cursor:pointer;">×</span>
+        <!-- Favourite Games -->
+        <div>
+            <h2 class="section-title">Favourite Games</h2>
+            <div class="top-games" id="top-games"></div>
         </div>
 
-        <span id="rev-back">← Back to Search</span>
+        <!-- Recently Played Carousel -->
+        <div>
+            <h2 class="section-title">Recently Played</h2>
+            <div class="game-carousel-container">
+                <div class="game-carousel" id="carousel"></div>
+            </div>
+        </div>
 
-        <img id="rev-cover" src="" alt="Game Cover">
-
-        <div id="rev-name"></div>
-        <div id="rev-year"></div>
-
-        <div id="rev-stars">☆☆☆☆☆</div>
-
-        <label>
-        <input type="checkbox" id="rev-date-enabled" checked>
-        Include date
-        </label>
-
-        <input type="date" id="rev-date">
-
-        <input 
-        id="rev-tags"
-        type="text"
-        placeholder="Tags (comma separated)"
-        >
-
-        <textarea 
-        id="rev-text"
-        placeholder="Write your review..."
-        ></textarea>
-
-        <button id="rev-save" class="btn btn-green">Save</button>
-        <div id="rev-msg"></div>
+        <!-- Recent Reviews -->
+        <div class="recent-reviews" id="recent-reviews"></div>
     </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+    <p>© 2025 Questloggd — Powered by 
+        <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+    </p>
+    <button class="btn btn-green contact-btn"
+            onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
     </div>
+</footer>
 
-    <!-- ⭐ Include the log.js modal script -->
-    <script src="log.js"></script>
+<!-- Log & Review Modals -->
+<div id="log-overlay" class="hidden" aria-hidden="true">
+<div id="log-modal">
+    <div id="log-top">
+    <h2>Search Game</h2>
+    <span id="log-close" style="cursor:pointer;">×</span>
+    </div>
+    <input id="log-search" type="text" placeholder="Search games..." autocomplete="off">
+    <div id="log-results"></div>
+</div>
+</div>
 
-    <script>
-    async function checkAuth() {
-        try {
-            const response = await fetch('http://localhost:3000/api/check-auth', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            
-            if (!data.authenticated) {
-                window.location.href = '/login.html';
-            }
-        } catch (err) {
-            console.error('Auth check failed:', err);
-            window.location.href = '/login.html';
-        }
-    }
+<div id="review-overlay" class="hidden" aria-hidden="true">
+<div id="review-modal">
+    <div id="rev-top">
+    <h2>Log Game Review</h2>
+    <span id="rev-close" style="cursor:pointer;">×</span>
+    </div>
+    <span id="rev-back">← Back to Search</span>
+    <img id="rev-cover" src="" alt="Game Cover">
+    <div id="rev-name"></div>
+    <div id="rev-year"></div>
+    <div id="rev-stars-container">
+        <span class="rev-star" data-value="1">☆</span>
+        <span class="rev-star" data-value="2">☆</span>
+        <span class="rev-star" data-value="3">☆</span>
+        <span class="rev-star" data-value="4">☆</span>
+        <span class="rev-star" data-value="5">☆</span>
+    </div>
+    <label>
+    <input type="checkbox" id="rev-date-enabled" checked>
+    Include date
+    </label>
+    <input type="date" id="rev-date">
+    <input id="rev-tags" type="text" placeholder="Tags (comma separated)">
+    <textarea id="rev-text" placeholder="Write your review..."></textarea>
+    <button id="rev-save" class="btn btn-green">Save</button>
+    <div id="rev-msg"></div>
+</div>
+</div>
 
-    checkAuth();
-
-    const carousel = document.getElementById('carousel');
-    const container = carousel.closest('.game-carousel-container');
-
-    carousel.innerHTML += carousel.innerHTML;
-
-    let offset = 0;
-
-    function slideCarousel() {
-        offset += 1;
-        if (offset >= carousel.scrollWidth / 2) offset = 0;
-        carousel.style.transform = `translateX(-${offset}px)`;
-    }
-
-    setInterval(slideCarousel, 20);
-    </script>
+<script src="log.js"></script>
+<script src="profile.js"></script>
 </body>
 </html>

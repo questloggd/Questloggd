@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const data = await response.json();
       if (response.ok) {
-        window.location.href = data.redirect || '/quest_user.html';
-      } else {
-        if (msg) msg.textContent = data.error || 'Login failed';
-      }
+      // Save userId locally
+      localStorage.setItem('userId', data.user?.id || data.tokenPayload?.id || '');
+      window.location.href = data.redirect || '/quest_user.html';
+    }
     } catch (err) {
       console.error('Login error:', err);
       if (msg) msg.textContent = 'Network error. Is the backend running?';
