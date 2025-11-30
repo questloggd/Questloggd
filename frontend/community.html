@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questloggd - Community</title>
+<style>
+/* Base styling (same palette as Questloggd) */
+body {
+  background-color: #121212;
+  color: #f0f0f0;
+  font-family: 'Arial', sans-serif;
+}
+header {
+  background-color: #2e005e;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+header a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+header a:hover {
+  color: #ff69b4;
+}
+.container {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  margin-bottom: 20px;
+}
+.user-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+}
+.user-card {
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.user-card:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.03);
+}
+.user-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.user-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #fff;
+}
+.user-bio {
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+/* Modal styling */
+#user-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#user-modal.show {
+  visibility: visible;
+  opacity: 1;
+}
+#user-modal .modal-content {
+  background-color: #2e2e2e;
+  border-radius: 10px;
+  padding: 20px 30px;
+  width: min(500px, 90%);
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+#user-modal img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+#user-modal h2 {
+  margin-bottom: 5px;
+}
+#user-modal .close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 22px;
+  color: #ccc;
+}
+#user-modal .close-btn:hover {
+  color: #fff;
+}
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+.stats div {
+  background-color: #3a3a3a;
+  border-radius: 6px;
+  padding: 10px;
+  width: 100px;
+}
+</style>
+</head>
+<body>
+
+<!-- Top navigation -->
+<header>
+  <a href="quest_user.html">Profile</a>
+  <a href="#">Lists</a>
+  <a href="#">Games</a>
+  <a href="#">Friends</a>
+  <a href="#">Settings</a>
+  <a href="community.html" style="color:#ff69b4;">Community</a>
+</header>
+
+<!-- Community grid -->
+<div class="container">
+  <h1>Community Members</h1>
+  <div class="user-list" id="user-list"></div>
+</div>
+
+<!-- User pop-up modal -->
+<div id="user-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-modal">&times;</span>
+    <img id="modal-pic" src="" alt="">
+    <h2 id="modal-name"></h2>
+    <p id="modal-bio"></p>
+    <div class="stats">
+      <div><strong id="modal-level">0</strong><br>Level</div>
+      <div><strong id="modal-games">0</strong><br>Games Played</div>
+      <div><strong id="modal-followers">0</strong><br>Followers</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Hardcoded list of sample community users
+const users = [
+  {
+    name: "Ayesha Gamer",
+    pic: "images/profile1.jpg",
+    bio: "RPG lover, indie explorer, coffee-powered player.",
+    level: 15,
+    games: 58,
+    followers: 132
+  },
+  {
+    name: "Omar Plays",
+    pic: "images/profile2.jpg",
+    bio: "Competitive shooter enthusiast. Valorant main.",
+    level: 9,
+    games: 33,
+    followers: 76
+  },
+  {
+    name: "Sara Dev",
+    pic: "images/profile3.jpg",
+    bio: "Loves cozy games and storytelling adventures.",
+    level: 20,
+    games: 72,
+    followers: 201
+  },
+  {
+    name: "Ali Quest",
+    pic: "images/profile4.jpg",
+    bio: "Retro gamer, collector of classics.",
+    level: 12,
+    games: 44,
+    followers: 98
+  }
+];
+
+// Render user cards
+const container = document.getElementById('user-list');
+container.innerHTML = users.map((u,i)=>`
+  <div class="user-card" data-index="${i}">
+    <img src="${u.pic}" alt="${u.name}">
+    <div class="user-name">${u.name}</div>
+    <div class="user-bio">${u.bio}</div>
+  </div>
+`).join('');
+
+// Modal logic
+const modal = document.getElementById('user-modal');
+const closeBtn = document.getElementById('close-modal');
+
+container.addEventListener('click', (e)=>{
+  const card = e.target.closest('.user-card');
+  if(!card) return;
+  const user = users[card.dataset.index];
+  document.getElementById('modal-pic').src = user.pic;
+  document.getElementById('modal-name').textContent = user.name;
+  document.getElementById('modal-bio').textContent = user.bio;
+  document.getElementById('modal-level').textContent = user.level;
+  document.getElementById('modal-games').textContent = user.games;
+  document.getElementById('modal-followers').textContent = user.followers;
+  modal.classList.add('show');
+});
+
+closeBtn.addEventListener('click', ()=> modal.classList.remove('show'));
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show'); });
+</script>
+
+</body>
+</html>
