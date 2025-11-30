@@ -16,24 +16,6 @@
       padding: 0;
     }
 
-    header {
-      background-color: #2e005e;
-      padding: 15px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-      margin-right: 20px;
-    }
-
-    header a:hover {
-      color: #ff69b4;
-    }
 
     .banner {
       background-color: #1a1a1a;
@@ -142,16 +124,20 @@
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <a href="quest_user.html">Profile</a>
-      <a href="#">Lists</a>
-      <a href="quest_collection.html">Games</a>
-      <a href="#">Friends</a>
-      <a href="#">Settings</a>
-      <a href="daily_challenge.html">Daily Challenge</a>
-    </div>
-  </header>
+  <header class="topbar">
+  <div class="brand">
+    <img src="images/logo.png" alt="Questloggd" class="logo" />
+    <span class="wordmark">Questloggd</span>
+  </div>
+  <nav class="navlinks">
+    <a href="quest_user.html" class="link">Profile</a>
+    <a href="#">Lists</a>
+    <a href="quest_collection.html" class="link">Games</a>
+    <a href="#">Friends</a>
+    <a href="#">Settings</a>
+    <a href="daily_challenge.html" class="link" style="color: #FFD700;">Daily Challenge</a>
+  </nav>
+</header>
 
   <div class="banner">
     <div class="banner-content">
@@ -212,15 +198,14 @@
     </div>
   </div>
 
-      <footer class="footer">
-        <div class="footer-content">
-        <p>© 2025 Questloggd — Powered by 
-            <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
-        </p>
-        <button class="btn btn-green contact-btn"
-                onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
-        </div>
-    </footer>
+<footer class="footer">
+  <div class="footer-content">
+    <p>© 2025 Questloggd — Powered by 
+      <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+    </p>
+    <button class="btn btn-green contact-btn" onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+  </div>
+</footer>
 
   <script>
     function scrollRow(rowId, direction) {

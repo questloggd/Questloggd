@@ -150,52 +150,49 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // SAVE LOG ENTRY
-  revSave?.addEventListener('click', async () => {
-    if (!userId) {
-      revMsg.textContent = 'You must be logged in to save a log.';
-      return;
-    }
-    revMsg.textContent = 'Saving…';
-    try {
-      const res = await fetch('/logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          userId,
-          gameId: selected.id,
-          gameName: selected.name,
-          year: selected.year,
-          image: selected.image || '',
-          date: revDateEn.checked ? revDate.value : new Date().toISOString(),
-          review: revText.value.trim(),
-          rating: selected.rating,
-          tags: revTags.value.trim()
-        })
-      });
+revSave?.addEventListener("click", async () => {
+  if (!userId) {
+    revMsg.textContent = "You must be logged in to save a log.";
+    return;
+  }
 
-      const data = await res.json();
-      if (res.ok) {
-        revMsg.textContent = 'Logged! Updating profile…';
-        setTimeout(() => {
-          if (window.addNewLog) addNewLog({
-            gameId: selected.id,
-            gameName: selected.name,
-            year: selected.year,
-            image: selected.image,
-            date: revDateEn.checked ? revDate.value : new Date().toISOString(),
-            review: revText.value.trim(),
-            rating: selected.rating,
-            tags: revTags.value.trim()
-          });
-          closeReview();
-        }, 300);
-      } else {
-        revMsg.textContent = data.error || 'Failed to save log';
-      }
-    } catch (err) {
-      console.error(err);
-      revMsg.textContent = 'Network error.';
+  revMsg.textContent = "Saving…";
+
+  try {
+    const payload = {
+      userId: Number(userId),
+      gameId: Number(selected.id),
+      gameName: selected.name || "",
+      rating: Number(selected.rating || 0),
+      review: revText.value.trim() || "",
+      image: selected.image || "",
+      year: selected.year || "",
+      genre: Array.isArray(selected.genre) ? selected.genre : [],
+      platforms: Array.isArray(selected.platforms) ? selected.platforms : [],
+      popularity: Number(selected.popularity || 0),
+      createdAt: revDateEn.checked ? new Date(revDate.value) : new Date()
+    };
+
+    const res = await fetch("/logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      revMsg.textContent = "Logged! Updating profile…";
+      setTimeout(() => {
+        if (window.addNewLog) addNewLog(payload);
+        closeReview();
+      }, 300);
+    } else {
+      revMsg.textContent = data.error || "Failed to save log";
     }
+  } catch (err) {
+    console.error(err);
+    revMsg.textContent = "Network error.";
+  }
   });
 });

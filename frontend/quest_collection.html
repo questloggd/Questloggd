@@ -1,295 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Questloggd - Game Collection</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questloggd - Game Collection</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+body { background-color: #121212; color: #f0f0f0; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
 
-    header {
-    background-color: #2e005e;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
+/* -------------------- */
+/* Banner & Collection Grid */
+/* -------------------- */
+.banner { background-color: #1a1a1a; height: 150px; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; }
+.banner-content { background-color: #2a2a2a; padding: 20px 60px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); flex-grow: 1; text-align: center; margin-right: 30px; }
+.banner-content h1 { color: white; font-size: 2.2em; margin: 0; }
+.discover-btn { background-color: #2e005e; border: none; color: white; padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: background 0.3s; white-space: nowrap; }
+.discover-btn:hover { background-color: #ff69b4; }
 
-header a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s;
-}
+.collection-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; background-color: #1a1a1a; border-bottom: 2px solid #2e005e; }
+.profile-info { display: flex; align-items: center; gap: 15px; }
+.profile-info img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+.username { font-size: 1.2em; font-weight: bold; }
 
-header a:hover {
-    color: #ff69b4;
-}
+.filter-bar { display: flex; justify-content: center; padding: 15px 40px; background-color: #1a1a1a; }
+.filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
 
-    .banner {
-      background-color: #1a1a1a;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 60px;
-    }
+.game-grid { display: grid; grid-template-columns: repeat(auto-fill, 150px); justify-content: center; gap: 15px; padding: 20px 40px; }
+.game-card { width: 150px; height: 270px; background-color: #1a1a1a; border-radius: 10px; overflow: hidden; text-align: center; transition: transform 0.3s; }
+.game-card:hover { transform: scale(1.05); }
+.game-card img { width: 100%; height: 200px; object-fit: cover; }
+.game-title { padding: 5px 10px; font-size: 0.95em; height: 70px; display: flex; align-items: center; justify-content: center; text-align: center; }
 
-    .banner-content {
-      background-color: #2a2a2a;
-      padding: 20px 60px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      flex-grow: 1;
-      text-align: center;
-      margin-right: 30px;
-    }
-
-    .banner-content h1 {
-      color: white;
-      font-size: 2.2em;
-      margin: 0;
-    }
-
-    .discover-btn {
-      background-color: #2e005e;
-      border: none;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-      white-space: nowrap;
-    }
-
-    .discover-btn:hover {
-      background-color: #ff69b4;
-    }
-
-    .collection-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 40px;
-      background-color: #1a1a1a;
-      border-bottom: 2px solid #2e005e;
-    }
-
-    .profile-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .profile-info img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .username {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
-
-    .filter-bar {
-      display: flex;
-      justify-content: center;
-      padding: 15px 40px;
-      background-color: #1a1a1a;
-    }
-
-    .filter-buttons {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 150px);
-      justify-content: center;
-      gap: 15px;
-      padding: 20px 40px;
-    }
-
-    .game-card {
-      width: 150px;
-      height: 270px;
-      background-color: #1a1a1a;
-      border-radius: 10px;
-      overflow: hidden;
-      text-align: center;
-      transition: transform 0.3s;
-    }
-
-    .game-card:hover {
-      transform: scale(1.05);
-    }
-
-    .game-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .game-title {
-      padding: 5px 10px;
-      font-size: 0.95em;
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <header>
-    <a href="#">Profile</a>
+<!-- Header -->
+<header class="topbar">
+  <div class="brand">
+    <img src="images/logo.png" alt="Questloggd" class="logo" />
+    <span class="wordmark">Questloggd</span>
+  </div>
+  <nav class="navlinks">
+    <a href="quest_user.html" class="link">Profile</a>
     <a href="#">Lists</a>
-    <a href="quest_collection.html">Games</a>
+    <a href="quest_collection.html" class="link">Games</a>
     <a href="#">Friends</a>
     <a href="#">Settings</a>
-    <a href="daily_challenge.html">Daily Challenge</a>
+    <a href="daily_challenge.html" class="link">Daily Challenge</a>
+  </nav>
 </header>
 
-  <div class="banner">
-    <div class="banner-content">
-      <h1>My Game Collection</h1>
+<!-- Banner -->
+<div class="banner">
+  <div class="banner-content">
+    <h1>My Game Collection</h1>
+  </div>
+  <button class="discover-btn" onclick="window.location.href='discover_games.html'">Discover Games</button>
+</div>
+
+<!-- Collection Header -->
+<div class="collection-header">
+  <div class="profile-info">
+    <img src="images/profile.jpg" alt="Profile Picture">
+    <div class="username">Username’s Collection</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar">
+  <div class="filter-buttons">
+    <input type="text" id="searchInput" placeholder="Search games..." style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px; width:200px;">
+    <select id="genreFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+      <option value="all">All Genres</option>
+      <option value="Action">Action</option>
+      <option value="Adventure">Adventure</option>
+      <option value="RPG">RPG</option>
+      <option value="Shooter">Shooter</option>
+      <option value="Strategy">Strategy</option>
+    </select>
+    <select id="yearFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+      <option value="all">All Years</option>
+      <option value="2024">2024</option>
+      <option value="2023">2023</option>
+      <option value="2022">2022</option>
+      <option value="2021">2021</option>
+    </select>
+    <select id="platformFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
+      <option value="all">All Platforms</option>
+      <option value="pc">PC</option>
+      <option value="playstation">PlayStation</option>
+      <option value="xbox">Xbox</option>
+      <option value="switch">Switch</option>
+    </select>
+    <select id="sortFilter" style="padding:8px 12px; border-radius:20px; border:none;">
+      <option value="default">Sort By</option>
+      <option value="az">A-Z</option>
+      <option value="popularity">Popularity</option>
+    </select>
+  </div>
+</div>
+
+<!-- Game Grid -->
+<div class="game-grid" id="gameGrid">
+  <!-- Loaded dynamically from collection.js -->
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 Questloggd — Powered by 
+        <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+      </p>
+      <button class="btn btn-green contact-btn"
+              onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
     </div>
-    <button class="discover-btn" onclick="window.location.href='discover_games.html'">Discover Games</button>
-  </div>
-
-  <div class="collection-header">
-    <div class="profile-info">
-      <img src="images/profile.jpg" alt="Profile Picture">
-      <div class="username">Username’s Collection</div>
-    </div>
-  </div>
-
-  <!-- Search + Filters + Sort -->
-  <div class="filter-bar">
-    <div class="filter-buttons">
-      <input type="text" id="searchInput" placeholder="Search games..." style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px; width:200px;">
-      
-      <select id="genreFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
-        <option value="all">All Genres</option>
-        <option value="Action">Action</option>
-        <option value="Adventure">Adventure</option>
-        <option value="RPG">RPG</option>
-        <option value="Shooter">Shooter</option>
-        <option value="Strategy">Strategy</option>
-      </select>
-
-      <select id="yearFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
-        <option value="all">All Years</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        <option value="2021">2021</option>
-      </select>
-
-      <select id="platformFilter" style="padding:8px 12px; border-radius:20px; border:none; margin-right:10px;">
-        <option value="all">All Platforms</option>
-        <option value="pc">PC</option>
-        <option value="playstation">PlayStation</option>
-        <option value="xbox">Xbox</option>
-        <option value="switch">Switch</option>
-      </select>
-
-      <select id="sortFilter" style="padding:8px 12px; border-radius:20px; border:none;">
-        <option value="default">Sort By</option>
-        <option value="az">A-Z</option>
-        <option value="popularity">Popularity</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="game-grid" id="gameGrid">
-    <!-- Example games with data attributes for filtering/sorting -->
-    <div class="game-card pc" data-genre="Shooter" data-year="2024" data-popularity="95"><img src="images/game1.jpg" alt=""><div class="game-title">Overwatch 2</div></div>
-    <div class="game-card playstation" data-genre="Action" data-year="2023" data-popularity="88"><img src="images/game2.jpg" alt=""><div class="game-title">Marvel Rivals</div></div>
-    <div class="game-card xbox" data-genre="Shooter" data-year="2022" data-popularity="75"><img src="images/game3.jpg" alt=""><div class="game-title">Battlefield 6</div></div>
-    <div class="game-card switch" data-genre="RPG" data-year="2021" data-popularity="80"><img src="images/game4.jpg" alt=""><div class="game-title">Risk of Rain 2</div></div>
-    <div class="game-card pc" data-genre="RPG" data-year="2022" data-popularity="90"><img src="images/carousel1.jpg" alt=""><div class="game-title">Pokemon: Black</div></div>
-    <div class="game-card playstation" data-genre="Action" data-year="2024" data-popularity="85"><img src="images/carousel2.jpg" alt=""><div class="game-title">Tekken 8</div></div>
-    <div class="game-card xbox" data-genre="Shooter" data-year="2023" data-popularity="92"><img src="images/carousel3.jpg" alt=""><div class="game-title">Fortnite</div></div>
-    <div class="game-card switch" data-genre="Shooter" data-year="2024" data-popularity="78"><img src="images/carousel4.jpg" alt=""><div class="game-title">Call of Duty: Infinite Warfare</div></div>
-    <div class="game-card pc" data-genre="Strategy" data-year="2021" data-popularity="60"><img src="images/carousel5.jpg" alt=""><div class="game-title">Among Us</div></div>
-    <div class="game-card playstation" data-genre="Action" data-year="2022" data-popularity="83"><img src="images/carousel6.jpg" alt=""><div class="game-title">Bloodborne</div></div>
-    <div class="game-card xbox" data-genre="RPG" data-year="2024" data-popularity="70"><img src="images/gameA_small.jpg" alt=""><div class="game-title">Silk Song</div></div>
-    <div class="game-card switch" data-genre="Adventure" data-year="2023" data-popularity="77"><img src="images/gameB_small.jpg" alt=""><div class="game-title">The Wolf Among Us</div></div>
-    <div class="game-card pc" data-genre="RPG" data-year="2022" data-popularity="82"><img src="images/gameC_small.jpg" alt=""><div class="game-title">The Binding of Isaac</div></div>
-    <div class="game-card playstation" data-genre="Action" data-year="2023" data-popularity="91"><img src="images/game5.jpg" alt=""><div class="game-title">Spiderman</div></div>
-    <div class="game-card xbox" data-genre="Adventure" data-year="2021" data-popularity="68"><img src="images/game6.jpg" alt=""><div class="game-title">Skylander's Trap Team</div></div>
-    <div class="game-card switch" data-genre="RPG" data-year="2024" data-popularity="87"><img src="images/game7.jpg" alt=""><div class="game-title">Pokemon Violet</div></div>
-    <div class="game-card pc" data-genre="RPG" data-year="2023" data-popularity="94"><img src="images/game8.jpg" alt=""><div class="game-title">Hogwart's Legacy</div></div>
-    <div class="game-card playstation" data-genre="Action" data-year="2024" data-popularity="96"><img src="images/game9.jpg" alt=""><div class="game-title">God of War Ragnorok</div></div>
-    <div class="game-card xbox" data-genre="Adventure" data-year="2022" data-popularity="90"><img src="images/game10.jpg" alt=""><div class="game-title">Minecraft</div></div>
-    <div class="game-card switch" data-genre="Fighting" data-year="2023" data-popularity="85"><img src="images/game11.jpg" alt=""><div class="game-title">Super Smash Bros Ultimate</div></div>
-  </div>
-
-  <footer class="footer">
-    <span>© Questloggd</span>
   </footer>
 
-  <script src="login-modal.js"></script>
-
-  <script>
-    // Combined search + filter + sort
-    const searchInput = document.getElementById('searchInput');
-    const genreFilter = document.getElementById('genreFilter');
-    const yearFilter = document.getElementById('yearFilter');
-    const platformFilter = document.getElementById('platformFilter');
-    const sortFilter = document.getElementById('sortFilter');
-    const cards = Array.from(document.querySelectorAll('.game-card'));
-
-    function applyFilters() {
-      const searchText = searchInput.value.toLowerCase();
-      const genre = genreFilter.value;
-      const year = yearFilter.value;
-      const platform = platformFilter.value;
-      const sort = sortFilter.value;
-
-      let filtered = cards.filter(card => {
-        const title = card.querySelector('.game-title').textContent.toLowerCase();
-        const cardGenre = card.getAttribute('data-genre');
-        const cardYear = card.getAttribute('data-year');
-        const cardPlatform = Array.from(card.classList).find(c => ['pc','playstation','xbox','switch'].includes(c));
-
-        return (title.includes(searchText)) &&
-               (genre === 'all' || genre === cardGenre) &&
-               (year === 'all' || year === cardYear) &&
-               (platform === 'all' || platform === cardPlatform);
-      });
-
-      if(sort === 'az') {
-        filtered.sort((a,b) => a.querySelector('.game-title').textContent.localeCompare(b.querySelector('.game-title').textContent));
-      } else if(sort === 'popularity') {
-        filtered.sort((a,b) => (b.getAttribute('data-popularity')||0) - (a.getAttribute('data-popularity')||0));
-      }
-
-      cards.forEach(card => card.style.display = 'none');
-      filtered.forEach(card => card.style.display = 'block');
-    }
-
-    searchInput.addEventListener('input', applyFilters);
-    genreFilter.addEventListener('change', applyFilters);
-    yearFilter.addEventListener('change', applyFilters);
-    platformFilter.addEventListener('change', applyFilters);
-    sortFilter.addEventListener('change', applyFilters);
-  </script>
-
+<script src="collection.js"></script>
+<script src="login-modal.js"></script>
 </body>
 </html>

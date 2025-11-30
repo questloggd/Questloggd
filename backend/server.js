@@ -76,9 +76,13 @@ const LogSchema = new mongoose.Schema({
   userId: Number,
   gameId: Number,
   gameName: String,
-  rating: Number,
-  review: String,
-  image: String,
+  rating: { type: Number, default: 0 },
+  review: { type: String, default: '' },
+  image: { type: String, default: '' },
+  year: { type: String, default: '' },
+  genre: { type: [String], default: [] }, // can be array of genres
+  platforms: { type: [String], default: [] }, // can be array of platforms
+  popularity: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -212,7 +216,19 @@ app.get("/games/search", async (req, res) => {
 // Create log
 app.post("/logs", async (req, res) => {
   try {
-    const { userId, gameId, gameName, rating, review, image } = req.body;
+    const {
+      userId,
+      gameId,
+      gameName,
+      rating,
+      review,
+      image,
+      year,
+      genre,
+      platforms,
+      popularity
+    } = req.body;
+
 
     if (!userId || !gameId || !gameName)
       return res.status(400).json({ error: "Missing required fields" });
@@ -224,6 +240,10 @@ app.post("/logs", async (req, res) => {
       rating: rating || 0,
       review: review || '',
       image: image || '',
+      year: year || '',
+      genre: genre || [],
+      platforms: platforms || [],
+      popularity: popularity || 0
     });
 
     await log.save();
@@ -258,6 +278,7 @@ app.get("/api/user/:id", async (req, res) => {
 
     const logs = await Log.find({ userId });
 
+    // Favourite games (top rated)
     const favouriteGames = logs
       .filter(l => l.rating > 0)
       .sort((a,b) => b.rating - a.rating)
@@ -265,19 +286,31 @@ app.get("/api/user/:id", async (req, res) => {
       .map(l => ({
         gameId: l.gameId,
         name: l.gameName,
+        gameName: l.gameName,
         rating: l.rating,
-        image: l.image || ''
+        image: l.image || '',
+        year: l.year || 'Unknown',
+        genre: l.genre || [],
+        platforms: l.platforms || [],
+        popularity: l.popularity || 0
       }));
 
+    // Recently played (most recent logs)
     const recentlyPlayed = logs
       .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 10)
       .map(l => ({
         gameId: l.gameId,
         name: l.gameName,
-        image: l.image || ''
+        gameName: l.gameName,
+        image: l.image || '',
+        year: l.year || 'Unknown',
+        genre: l.genre || [],
+        platforms: l.platforms || [],
+        popularity: l.popularity || 0
       }));
 
+    // Recent reviews
     const recentReviews = logs
       .filter(l => l.review && l.review.trim() !== '')
       .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -285,9 +318,14 @@ app.get("/api/user/:id", async (req, res) => {
       .map(l => ({
         gameId: l.gameId,
         name: l.gameName,
+        gameName: l.gameName,
         review: l.review,
         rating: l.rating,
-        image: l.image || ''
+        image: l.image || '',
+        year: l.year || 'Unknown',
+        genre: l.genre || [],
+        platforms: l.platforms || [],
+        popularity: l.popularity || 0
       }));
 
     res.json({
@@ -308,6 +346,89 @@ app.get("/api/user/:id", async (req, res) => {
       recentlyPlayed,
       recentReviews
     });
+  } catch (err) {
+    console.error("Error in /api/user/:id:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /api/game/:id
+app.get("/api/game/:id", async (req, res) => {
+  const gameId = parseInt(req.params.id);
+  const game = await Game.findOne({ id: gameId });
+  if (!game) return res.status(404).json({ error: "Game not found" });
+
+  res.json({
+    name: game.name,
+    image: game.image || "images/default_game.jpg",
+    description: game.description || "No description available"
+  });
+});
+
+// GET /api/game/logs/:id
+app.get("/api/game/logs/:id", async (req, res) => {
+  const gameId = parseInt(req.params.id);
+
+  // Fetch logs for this game
+  const logs = await Log.find({ gameId });
+
+  // Get unique userIds from logs
+  const userIds = [...new Set(logs.map(l => l.userId))];
+  const users = await User.find({ id: { $in: userIds } });
+
+  // Map userId → username (email before @)
+  const userMap = {};
+  users.forEach(u => {
+    userMap[u.id] = u.email.split("@")[0]; // extract username from email
+  });
+
+  const formattedLogs = logs.map(l => ({
+    userId: l.userId,
+    username: userMap[l.userId] || "Unknown User",
+    userPfp: l.image || "images/profile.jpg",
+    rating: l.rating,
+    review: l.review,
+    gameName: l.gameName,
+    gameId: l.gameId
+  }));
+
+  res.json(formattedLogs);
+});
+
+
+
+// Get unique games for current user (most recent log per game)
+app.get("/api/user/games", async (req, res) => {
+  try {
+    if (!req.session?.user?.id)
+      return res.status(401).json({ error: "Not logged in" });
+
+    const userId = req.session.user.id;
+    const logs = await Log.find({ userId }).sort({ createdAt: -1 });
+
+    // Remove duplicates, keep most recent per gameId
+    const seen = new Set();
+    for (const log of logs) {
+      if (!seen.has(log.gameId)) {
+        seen.add(log.gameId);
+        uniqueGames.push({
+          gameId: log.gameId,
+          id: log.gameId,
+          name: log.gameName,
+          gameName: log.gameName,
+          cover: log.image || "images/default_game.jpg",
+          image: log.image || "images/default_game.jpg",
+          genre: log.genre || [],
+          platforms: log.platforms || [],
+          year: log.year || "Unknown",
+          popularity: log.popularity || 0
+        });
+      }
+    }
+
+res.json(uniqueGames);
+
+    res.json({ games: uniqueGames });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
