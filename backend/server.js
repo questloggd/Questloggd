@@ -90,6 +90,10 @@ const UserSchema = new mongoose.Schema({
   id: Number,
   email: { type: String, unique: true },
   passwordHash: String,
+
+  steamName: { type: String, default: "" },
+  xboxName: { type: String, default: "" },
+  psnName: { type: String, default: "" }
 });
 
 const Game = mongoose.model("Game", GameSchema);
@@ -132,6 +136,25 @@ app.post("/api/signup", async (req, res) => {
     console.error("Signup error:", err);
     res.status(500).json({ error: "Failed to create account" });
   }
+});
+
+app.post("/api/link-account", async (req, res) => {
+  if (!req.session?.user?.id)
+    return res.status(401).json({ error: "Not logged in" });
+
+  const userId = req.session.user.id;
+  const { platform, username } = req.body;
+
+  if (!["steam", "xbox", "psn"].includes(platform))
+    return res.status(400).json({ error: "Invalid platform" });
+
+  const update = {};
+  if (platform === "steam") update.steamName = username;
+  if (platform === "xbox") update.xboxName = username;
+  if (platform === "psn") update.psnName = username;
+
+  await User.updateOne({ id: userId }, update);
+  res.json({ ok: true, message: platform + " linked!" });
 });
 
 // Login
