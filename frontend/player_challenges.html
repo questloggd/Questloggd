@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questloggd - Public Challenges</title>
+<link rel="stylesheet" href="styles.css">
+
+
+<style>
+/* ------------------------------ */
+/* GENERAL STYLES */
+/* ------------------------------ */
+header {
+    background-color: #2e005e;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+header a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+header a:hover {
+    color: #ff69b4;
+}
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3 {
+    color: #6a0dad;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #6a0dad;
+}
+
+/* ------------------------------ */
+/* NAV / TABS */
+/* ------------------------------ */
+nav {
+    display: flex;
+    gap: 20px;
+    background: #111;
+    padding: 15px;
+    font-size: 18px;
+}
+
+nav a {
+    color: #bbb;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+nav a.active {
+    color: #6a0dad;
+    font-weight: bold;
+}
+
+/* ------------------------------ */
+/* SECTIONS */
+/* ------------------------------ */
+.section {
+    display: none;
+    padding: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* ------------------------------ */
+/* CARDS AND PANELS */
+/* ------------------------------ */
+.card, .challenge-card {
+    background: #111;
+    border: 1px solid #6a0dad;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border-radius: 6px;
+    border: 1px solid #6a0dad;
+    background: #000;
+    color: #eee;
+}
+
+/* ------------------------------ */
+/* CHALLENGE VIEW / ACTIVITY */
+/* ------------------------------ */
+.challenge-view {
+    display: none;
+}
+
+.activity-tabs {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    border-radius: 6px;
+    background: #222;
+    color: #eee;
+    transition: 0.2s;
+}
+
+.tab-btn.active {
+    background: #6a0dad;
+    color: #fff;
+}
+
+.activity-content {
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.xp-click-btn {
+    font-size: 22px;
+    padding: 20px;
+    background: #6a0dad;
+    color: #fff;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+}
+
+#challengeLeaderboard li {
+    margin-bottom: 5px;
+}
+
+/* Combo popup animation */
+.combo-popup {
+    color: #ff0;
+    font-weight: bold;
+    position: absolute;
+    font-size: 24px;
+    animation: popup 0.8s forwards;
+}
+
+@keyframes popup {
+    0% {opacity:1; transform: translateY(0);}
+    100% {opacity:0; transform: translateY(-50px);}
+}
+
+.back-btn {
+    margin-bottom: 15px;
+    background: #6a0dad;
+    color: #fff;
+    padding: 8px 15px;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <a href="#">Profile</a>
+    <a href="#">Lists</a>
+    <a href="quest_collection.html">Games</a>
+    <a href="#">Friends</a>
+    <a href="#">Settings</a>
+    <a href="daily_challenge.html">Daily Challenge</a>
+    <a href="player_challenges.html">Player Challenges</a>
+</header>
+
+<!-- NAV -->
+<nav>
+    <a data-target="create" class="active">Create Challenge</a>
+    <a data-target="browse">Browse Challenges</a>
+</nav>
+
+<!-- ========================= CREATE CHALLENGE ========================= -->
+<div class="section active" id="create">
+    <h2>Create Public Challenge</h2>
+    <div class="card">
+        <label>Challenge Title</label>
+        <input type="text" id="title">
+
+        <label>Theme</label>
+        <select id="theme">
+            <option>RPG</option>
+            <option>Shooter</option>
+            <option>Adventure</option>
+            <option>Holiday Event</option>
+        </select>
+
+        <label>Rules</label>
+        <textarea id="rules"></textarea>
+
+        <label>Start Date</label>
+        <input type="date" id="start">
+
+        <label>End Date</label>
+        <input type="date" id="end">
+
+        <button onclick="createChallenge()">Create Challenge</button>
+        <p id="createMsg" style="font-weight:bold;"></p>
+    </div>
+</div>
+
+<!-- ========================= BROWSE CHALLENGES ========================= -->
+<div class="section" id="browse">
+    <h2>Public Challenges</h2>
+    <div id="challengeList"></div>
+</div>
+
+<!-- ========================= CHALLENGE VIEW (XP + Trivia) ========================= -->
+<div class="challenge-view" id="challengeView">
+    <button class="back-btn" id="backToBrowse">← Back</button>
+    <h2 id="challengeTitleView">Challenge Name</h2>
+    <p id="challengeInfo"></p>
+
+    <!-- ACTIVITY TABS -->
+    <div class="activity-tabs">
+        <button class="tab-btn active" data-tab="xpTab">XP Clicker</button>
+        <button class="tab-btn" data-tab="triviaTab">Trivia</button>
+    </div>
+
+    <!-- XP CLICKER TAB -->
+    <div class="activity-content" id="xpTab">
+        <h3>XP Clicker Game</h3>
+        <p>Click as fast as you can to earn XP!</p>
+        <button class="xp-click-btn" id="xpClickBtn">CLICK ME!</button>
+        <h3>Your XP: <span id="xpScore">0</span></h3>
+    </div>
+
+    <!-- TRIVIA TAB -->
+    <div class="activity-content hidden" id="triviaTab">
+        <h3>Gaming Trivia</h3>
+        <p id="triviaQuestion">Press Start to Begin!</p>
+        <div id="triviaOptions"></div>
+        <button id="triviaStartBtn">Start Trivia</button>
+        <h3>Your Trivia Score: <span id="triviaScore">0</span></h3>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <h2>Leaderboard</h2>
+    <ul id="challengeLeaderboard"></ul>
+</div>
+
+<script>
+// -------------------------------
+// LOCAL STORAGE CHALLENGES
+// -------------------------------
+function getChallenges() {
+    return JSON.parse(localStorage.getItem("challenges") || "[]");
+}
+
+function saveChallenges(challenges) {
+    localStorage.setItem("challenges", JSON.stringify(challenges));
+}
+
+// -------------------------------
+// CREATE CHALLENGE
+// -------------------------------
+function createChallenge() {
+    const title = document.getElementById("title").value.trim();
+    const theme = document.getElementById("theme").value.trim();
+    const rules = document.getElementById("rules").value.trim();
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+    const msg = document.getElementById("createMsg");
+
+    if (!title || !rules || !start || !end) {
+        msg.style.color = "red";
+        msg.textContent = "All fields are required!";
+        return;
+    }
+
+    const challenges = getChallenges();
+    const newChallenge = {
+        id: Date.now(),
+        title,
+        theme,
+        rules,
+        start,
+        end,
+        participants: []
+    };
+
+    challenges.push(newChallenge);
+    saveChallenges(challenges);
+
+    msg.style.color = "#6a0dad";
+    msg.textContent = "Challenge created!";
+    document.getElementById("title").value = "";
+    document.getElementById("rules").value = "";
+    document.getElementById("start").value = "";
+    document.getElementById("end").value = "";
+
+    loadChallenges();
+    switchTab("browse");
+}
+
+// -------------------------------
+// LOAD CHALLENGES
+// -------------------------------
+function loadChallenges() {
+    const challenges = getChallenges();
+    const container = document.getElementById("challengeList");
+    container.innerHTML = "";
+
+    if (challenges.length === 0) {
+        container.innerHTML = "<p>No public challenges yet.</p>";
+        return;
+    }
+
+    challenges.forEach(ch => {
+        const div = document.createElement("div");
+        div.className = "challenge-card";
+        div.innerHTML = `
+            <h3>${ch.title}</h3>
+            <p><strong>Theme:</strong> ${ch.theme}</p>
+            <p><strong>Rules:</strong> ${ch.rules}</p>
+            <p><strong>Dates:</strong> ${ch.start} → ${ch.end}</p>
+            <button onclick="joinChallenge(${ch.id})">Join Challenge</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// -------------------------------
+// JOIN CHALLENGE & SHOW ACTIVITY
+// -------------------------------
+let currentChallenge = null;
+let xp = 0;
+let triviaScore = 0;
+let leaderboardData = [];
+
+function joinChallenge(id) {
+    const challenges = getChallenges();
+    const challenge = challenges.find(c => c.id === id);
+
+    currentChallenge = challenge;
+
+    // Pretend user "You"
+    if (!challenge.participants.includes("You")) {
+        challenge.participants.push("You");
+        saveChallenges(challenges);
+        alert("You joined the challenge!");
+    }
+
+    // Show Challenge View
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById("challengeView").style.display = "block";
+
+    document.getElementById("challengeTitleView").textContent = challenge.title;
+    document.getElementById("challengeInfo").textContent = `Theme: ${challenge.theme} | Dates: ${challenge.start} → ${challenge.end}`;
+
+    xp = 0;
+    triviaScore = 0;
+    document.getElementById("xpScore").textContent = xp;
+    document.getElementById("triviaScore").textContent = triviaScore;
+    updateLeaderboard();
+}
+
+// -------------------------------
+// BACK TO BROWSE
+// -------------------------------
+document.getElementById("backToBrowse").addEventListener("click", () => {
+    document.getElementById("challengeView").style.display = "none";
+    switchTab("browse");
+});
+
+// -------------------------------
+// TAB SWITCHING
+// -------------------------------
+document.querySelectorAll("nav a").forEach(a => {
+    a.onclick = () => switchTab(a.getAttribute("data-target"));
+});
+document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const tab = btn.dataset.tab;
+        document.querySelectorAll(".activity-content").forEach(sec => sec.classList.add("hidden"));
+        document.getElementById(tab).classList.remove("hidden");
+    });
+});
+
+function switchTab(target) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(target).classList.add("active");
+
+    document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+    document.querySelector(`nav a[data-target="${target}"]`).classList.add("active");
+}
+
+// -------------------------------
+// XP CLICKER WITH COMBO POPUPS
+// -------------------------------
+document.getElementById("xpClickBtn").addEventListener("click", (e) => {
+    xp += 1;
+    document.getElementById("xpScore").textContent = xp;
+
+    // Show combo popup
+    const popup = document.createElement("div");
+    popup.className = "combo-popup";
+    popup.style.left = (e.clientX) + "px";
+    popup.style.top = (e.clientY) + "px";
+    popup.textContent = "+1 XP";
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 800);
+
+    updateLeaderboard();
+});
+
+// -------------------------------
+// TRIVIA GAME
+// -------------------------------
+const triviaQuestions = [
+    { q: "Which game series features Master Chief?", a: "Halo", o: ["Halo","Doom","Destiny","Crysis"] },
+    { q: "What year was Minecraft released?", a: "2011", o: ["2009","2011","2013","2015"] },
+    { q: "Highest-selling console?", a: "PS2", o: ["PS1","PS2","Xbox 360","Switch"] },
+    { q: "Quote 'The cake is a lie'?", a: "Portal", o: ["Portal","Half-Life","Bioshock","Fallout"] },
+    { q: "The Witcher main character?", a: "Geralt", o: ["Geralt","Ciri","Vesemir","Dandelion"] },
+    { q: "Nintendo mascot?", a: "Mario", o: ["Mario","Link","Pikachu","Samus"] },
+    { q: "FPS game with Counter-Terrorists?", a: "CS", o: ["CS","CoD","Battlefield","Overwatch"] },
+    { q: "Game with Lemmings?", a: "Lemmings", o: ["Lemmings","Tetris","Pac-Man","Doom"] },
+    { q: "Game with 'Epona'?", a: "Zelda", o: ["Zelda","Final Fantasy","Skyrim","Mario"] },
+    { q: "Game where you build with blocks?", a: "Minecraft", o: ["Minecraft","Roblox","Terraria","Fortnite"] },
+    { q: "Game with 'Vault Boy'?", a: "Fallout", o: ["Fallout","Skyrim","Doom","Halo"] },
+    { q: "Game with 'Snake' protagonist?", a: "Metal Gear", o: ["Metal Gear","Tetris","Halo","Doom"] },
+    { q: "Who created Fortnite?", a: "Epic Games", o: ["Epic Games","Valve","Blizzard","Nintendo"] },
+    { q: "Mario's brother?", a: "Luigi", o: ["Luigi","Wario","Yoshi","Bowser"] },
+    { q: "Game with 'Night City'?", a: "Cyberpunk 2077", o: ["Cyberpunk 2077","Watch Dogs","Overwatch","Doom"] },
+    { q: "Game with 'Kratos'?", a: "God of War", o: ["God of War","Assassin's Creed","Halo","Fortnite"] },
+    { q: "Game with 'Assassin’s Creed' protagonist?", a: "Ezio", o: ["Ezio","Altair","Connor","Bayek"] },
+    { q: "Game with 'Sonic' protagonist?", a: "Sonic", o: ["Sonic","Mario","Crash","Pikachu"] },
+    { q: "Game with 'Samus' protagonist?", a: "Metroid", o: ["Metroid","Zelda","Mario","Kirby"] },
+    { q: "Game with 'Pac-Man' protagonist?", a: "Pac-Man", o: ["Pac-Man","Mario","Sonic","Link"] }
+];
+
+let triviaIndex = 0;
+
+document.getElementById("triviaStartBtn").addEventListener("click", () => {
+    triviaIndex = 0;
+    triviaScore = 0;
+    document.getElementById("triviaScore").textContent = triviaScore;
+    showTriviaQuestion();
+});
+
+function showTriviaQuestion() {
+    const q = triviaQuestions[triviaIndex];
+    document.getElementById("triviaQuestion").textContent = q.q;
+
+    const optionsDiv = document.getElementById("triviaOptions");
+    optionsDiv.innerHTML = "";
+
+    q.o.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.style.margin = "5px";
+        btn.addEventListener("click", () => checkTriviaAnswer(opt));
+        optionsDiv.appendChild(btn);
+    });
+}
+
+function checkTriviaAnswer(selected) {
+    const correct = triviaQuestions[triviaIndex].a;
+    if (selected === correct) triviaScore++;
+    document.getElementById("triviaScore").textContent = triviaScore;
+
+    triviaIndex++;
+    if (triviaIndex < triviaQuestions.length) showTriviaQuestion();
+    else {
+        document.getElementById("triviaQuestion").textContent = "Trivia complete! Your score: " + triviaScore;
+        document.getElementById("triviaOptions").innerHTML = "";
+    }
+    updateLeaderboard();
+}
+
+// -------------------------------
+// LEADERBOARD
+// -------------------------------
+function updateLeaderboard() {
+    const totalScore = xp + triviaScore;
+    leaderboardData = [{ name: "You", score: totalScore }];
+    renderLeaderboard();
+}
+
+function renderLeaderboard() {
+    const list = document.getElementById("challengeLeaderboard");
+    list.innerHTML = "";
+    leaderboardData.sort((a,b)=>b.score-a.score).forEach(e=>{
+        const li = document.createElement("li");
+        li.textContent = `${e.name}: ${e.score} pts`;
+        list.appendChild(li);
+    });
+}
+
+// -------------------------------
+// INITIAL LOAD
+// -------------------------------
+loadChallenges();
+
+</script>
+
+<footer class="footer">
+    <div class="footer-content">
+    <p>© 2025 Questloggd — Powered by 
+        <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+    </p>
+    <button class="btn btn-green contact-btn"
+            onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+    </div>
+</footer>
+
+</body>
+</html>
