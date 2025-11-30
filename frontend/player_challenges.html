@@ -11,25 +11,6 @@
 /* ------------------------------ */
 /* GENERAL STYLES */
 /* ------------------------------ */
-header {
-    background-color: #2e005e;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-header a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-
-header a:hover {
-    color: #ff69b4;
-}
-
 
 body {
     font-family: 'Arial', sans-serif;
@@ -191,16 +172,21 @@ input, select, textarea {
 </head>
 <body>
 
-<header>
-    <a href="#">Profile</a>
+<header class="topbar">
+  <div class="brand">
+    <img src="images/logo.png" alt="Questloggd" class="logo" />
+    <span class="wordmark">Questloggd</span>
+  </div>
+  <nav class="navlinks">
+    <a href="quest_user.html" class="link">Profile</a>
     <a href="#">Lists</a>
-    <a href="quest_collection.html">Games</a>
+    <a href="quest_collection.html" class="link">Games</a>
     <a href="#">Friends</a>
     <a href="#">Settings</a>
-    <a href="daily_challenge.html">Daily Challenge</a>
-    <a href="player_challenges.html">Player Challenges</a>
+    <a href="daily_challenge.html" class="link" style="color: #FFD700;">Daily Challenge</a>
+    <a href="player_challenges.html" class="link" style="color: #00ff9d">Player Challenges</a>
+  </nav>
 </header>
-
 <!-- NAV -->
 <nav>
     <a data-target="create" class="active">Create Challenge</a>
