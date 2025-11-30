@@ -263,6 +263,79 @@ header a:hover {
 .review-text {
     flex: 1;
 }
+
+/* -------------------------- */
+/* NEW THEME COLOR CLASSES    */
+/* -------------------------- */
+
+body.theme-neon {
+    background-color: #ff00ff;
+    color: #ffffff;
+}
+
+body.theme-purple {
+    background-color: #3a0070;
+    color: #e5d4ff;
+}
+
+body.theme-ocean {
+    background-color: #003f5c;
+    color: #d4f1ff;
+}
+
+body.theme-emerald {
+    background-color: #003d2e;
+    color: #caffd4;
+}
+
+/* BADGES */
+.badge-container {
+    margin-top: 20px;
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.badge-container h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.badge {
+    padding: 6px 10px;
+    background-color: #444;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.8em;
+}
+
+.badge.active {
+    background-color: #ff69b4;
+}
+
+/* Selected badges display */
+#selected-badges {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#selected-badges span {
+    display: inline-block;
+    background-color: #ff69b4;
+    padding: 5px 8px;
+    border-radius: 5px;
+    margin: 3px;
+}
+
 </style>
 </head>
 <body>
@@ -272,6 +345,7 @@ header a:hover {
     <a href="quest_collection.html">Games</a>
     <a href="#">Friends</a>
     <a href="#">Settings</a>
+    <a href="daily_challenge.html">Daily Challenge</a>
 </header>
 
 <div class="container">
@@ -279,6 +353,8 @@ header a:hover {
     <div class="sidebar">
         <img src="images/profile.jpg" alt="Profile Picture" class="profile-pic">
         <div class="username" id="profile-username">Username</div>
+
+        <div id="selected-badges"></div>
 
         <div class="level-container">
             <div class="level-number" id="profile-level">0</div>
@@ -313,6 +389,34 @@ header a:hover {
             <h3>Recent Activity</h3>
             <div id="recent-activity-items"></div>
         </div>
+
+        <!-- ---------------------------- -->
+        <!-- NEW SECTION ADDED AT BOTTOM  -->
+        <!-- ---------------------------- -->
+
+        <div class="badge-container">
+            <h3>Select Badges (max 3)</h3>
+            <div class="badge-list">
+                <div class="badge">Veteran</div>
+                <div class="badge">Completionist</div>
+                <div class="badge">Speedrunner</div>
+                <div class="badge">Collector</div>
+                <div class="badge">Reviewer</div>
+                <div class="badge">Strategist</div>
+            </div>
+        </div>
+
+        <div class="badge-container">
+            <h3>Theme</h3>
+            <select id="theme-select" style="width:100%; padding:8px; border-radius:6px;">
+                <option value="default">Default</option>
+                <option value="neon">Neon Pink</option>
+                <option value="purple">Royal Purple</option>
+                <option value="ocean">Ocean Blue</option>
+                <option value="emerald">Emerald Green</option>
+            </select>
+        </div>
+
     </div>
 
     <!-- Right Main Content -->
@@ -337,6 +441,12 @@ header a:hover {
 
         <!-- Recent Reviews -->
         <div class="recent-reviews" id="recent-reviews"></div>
+
+        <!-- EXPORT BUTTON -->
+        <button id="export-profile" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
+            Export Profile
+        </button>
+
     </div>
 </div>
 
@@ -390,6 +500,62 @@ header a:hover {
     <div id="rev-msg"></div>
 </div>
 </div>
+
+<!-- BADGE + THEME + EXPORT LOGIC -->
+<script>
+// ------- BADGES -------
+const badges = document.querySelectorAll('.badge');
+const selectedContainer = document.getElementById('selected-badges');
+
+let selected = [];
+
+badges.forEach(b => {
+    b.addEventListener('click', () => {
+        const name = b.textContent;
+
+        if (b.classList.contains('active')) {
+            b.classList.remove('active');
+            selected = selected.filter(x => x !== name);
+        } else {
+            if (selected.length >= 3) return;
+            selected.push(name);
+            b.classList.add('active');
+        }
+
+        selectedContainer.innerHTML = selected
+            .map(x => `<span>${x}</span>`)
+            .join('');
+    });
+});
+
+// ------- THEMES -------
+document.getElementById("theme-select").addEventListener("change", (e) => {
+    document.body.className = ""; // reset
+    if (e.target.value !== "default") {
+        document.body.classList.add(`theme-${e.target.value}`);
+    }
+});
+
+// ------- EXPORT PROFILE -------
+document.getElementById("export-profile").addEventListener("click", () => {
+    const element = document.body;
+
+    html2canvas(element).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jspdf.jsPDF("p", "mm", "a4");
+
+        const width = pdf.internal.pageSize.getWidth();
+        const height = (canvas.height * width) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, width, height);
+        pdf.save("profile.pdf");
+    });
+});
+</script>
+
+<!-- external libs needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="log.js"></script>
 <script src="profile.js"></script>
