@@ -22,10 +22,6 @@ body { background-color: #121212; color: #fff; }
     text-align: center;
 }
 
-header { background-color: #2e005e; padding: 15px 30px; display: flex; align-items: center; gap: 30px; transition: background-color 0.3s; }
-header a { color: #fff; text-decoration: none; font-weight: bold; transition: color 0.2s; }
-header a:hover { color: #ff69b4; }
-
 /* Image */
 .section img {
     width: 130px;
@@ -190,15 +186,21 @@ header a:hover { color: #ff69b4; }
 <body>
 
 <!-- HEADER KEPT EXACTLY -->
-<header>
-<a href="#">Profile</a>
-<a href="#">Lists</a>
-<a href="quest_collection.html">Games</a>
-<a href="#">Friends</a>
-<a href="#">Settings</a>
-<a href="daily_challenge.html">Daily Challenge</a>
-<a href="player_challenges.html">Player Challenges</a>
+<header class="topbar">
+  <div class="brand">
+    <img src="images/logo.png" alt="Questloggd" class="logo" />
+    <span class="wordmark">Questloggd</span>
+  </div>
+  <nav class="navlinks">
+    <a href="quest_user.html" class="link">Profile</a>
+    <a href="#">Lists</a>
+    <a href="quest_collection.html" class="link">Games</a>
+    <a href="#">Friends</a>
+    <a href="#">Settings</a>
+    <a href="daily_challenge.html" class="link" style="color: #FFD700;">Daily Challenge</a>
+  </nav>
 </header>
+
 
 <!-- DAILY CHALLENGE TITLE -->
 <div class="section">
@@ -346,10 +348,13 @@ createKeyboard();
 
 <!-- FOOTER KEPT AS-IS -->
 <footer class="footer">
-<div class="footer-content">
-<p>© 2025 Questloggd — Powered by <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a></p>
-<button class="btn btn-green contact-btn" onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
-</div>
+  <div class="footer-content">
+    <p>© 2025 Questloggd — Powered by 
+      <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
+    </p>
+    <button class="btn btn-green contact-btn"
+            onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+  </div>
 </footer>
 
 </body>

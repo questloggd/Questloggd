@@ -7,37 +7,10 @@
 
 <link rel="stylesheet" href="styles.css">
 <style>
-/* Reset */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-}
-
+    
 body {
     background-color: #121212;
     color: #f0f0f0;
-}
-
-/* Header */
-header {
-    background-color: #2e005e;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-header a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-
-header a:hover {
-    color: #ff69b4;
 }
 
 /* Main layout */
@@ -336,17 +309,37 @@ body.theme-emerald {
     margin: 3px;
 }
 
+/* Red button for logout */
+.btn-red {
+    background-color: #e74c3c; /* Red */
+    color: #fff;               /* White text */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-red:hover {
+    background-color: #c0392b;
+}
+
 </style>
 </head>
 <body>
-<header>
-    <a href="#">Profile</a>
-    <a href="#">Lists</a>
-    <a href="quest_collection.html">Games</a>
-    <a href="#">Friends</a>
-    <a href="#">Settings</a>
-    <a href="daily_challenge.html">Daily Challenge</a>
-    <a href="player_challenges.html">Player Challenges</a>
+<header class="topbar">
+  <div class="brand">
+    <img src="images/logo.png" alt="Questloggd" class="logo" />
+    <span class="wordmark">Questloggd</span>
+  </div>
+
+  <nav class="navlinks">
+    <a href="quest_user.html" class="link">Profile</a>
+    <a href="#" class="link">Lists</a>
+    <a href="quest_collection.html" class="link">Games</a>
+    <a href="#" class="link">Friends</a>
+    <a href="#" class="link">Settings</a>
+    <a href="daily_challenge.html" class="link" style="color: #FFD700;">Daily Challenge</a>
+  </nav>
 </header>
 
 <div class="container">
@@ -443,23 +436,27 @@ body.theme-emerald {
         <!-- Recent Reviews -->
         <div class="recent-reviews" id="recent-reviews"></div>
 
-        <!-- EXPORT BUTTON -->
-        <button id="export-profile" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
-            Export Profile
-        </button>
+        <div class="profile-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+            <button id="export-profile" class="btn btn-green" style="width: fit-content; padding:10px 16px;">
+                Export Profile
+            </button>
+            <button id="logout-btn" class="btn btn-red" style="width: fit-content; padding:10px 16px;">
+                Logout
+            </button>
+        </div>
 
     </div>
 </div>
 
-<footer class="footer">
+  <footer class="footer">
     <div class="footer-content">
-    <p>© 2025 Questloggd — Powered by 
+      <p>© 2025 Questloggd — Powered by 
         <a href="https://rawg.io/apidocs" target="_blank" class="footer-link">RAWG API</a>
-    </p>
-    <button class="btn btn-green contact-btn"
-            onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
+      </p>
+      <button class="btn btn-green contact-btn"
+              onclick="window.location.href='mailto:contact@questloggd.com'">Contact Us</button>
     </div>
-</footer>
+  </footer>
 
 <!-- Log & Review Modals -->
 <div id="log-overlay" class="hidden" aria-hidden="true">
@@ -552,6 +549,27 @@ document.getElementById("export-profile").addEventListener("click", () => {
         pdf.save("profile.pdf");
     });
 });
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+    try {
+        const res = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        if (res.ok) {
+            // Clear any local storage info (optional)
+            localStorage.removeItem('userId');
+            // Redirect to login page
+            window.location.href = '/login.html';
+        } else {
+            alert('Logout failed');
+        }
+    } catch (err) {
+        console.error('Logout error:', err);
+    }
+});
+
 </script>
 
 <!-- external libs needed -->

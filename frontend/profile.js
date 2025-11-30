@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const profilePicEl = document.querySelector('.profile-pic');
   const bioEl = document.querySelector('.bio');
 
-  let logs = [];
-
-  // Get user ID from session or localStorage
   const userId = localStorage.getItem('userId');
   if (!userId) return console.warn('No user logged in');
 
@@ -18,16 +15,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!res.ok) throw new Error('Failed to fetch profile');
       const data = await res.json();
 
-      // Update profile info
-      if (usernameEl) usernameEl.textContent = data.username || 'Unknown';
-      if (profilePicEl) profilePicEl.src = data.profilePic || 'images/profile.jpg';
-      if (bioEl) bioEl.textContent = data.bio || '';
-
-      logs = data.recentlyPlayed || [];
+      // Basic profile data
+      if (usernameEl) usernameEl.textContent = data.username || "Unknown";
+      if (profilePicEl) profilePicEl.src = data.profilePic || "images/profile.jpg";
+      if (bioEl) bioEl.textContent = data.bio || "";
 
       renderAll(data);
     } catch (err) {
-      console.error('Error fetching profile:', err);
+      console.error("Error fetching profile:", err);
     }
   }
 
@@ -37,43 +32,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderReviews(profileData.recentReviews || []);
   }
 
+  // ⭐ FAVORITE GAMES SECTION
   function renderFavorites(top) {
     if (!topGamesContainer) return;
+
     topGamesContainer.innerHTML = top.map(game => `
-      <div class="game-card">
-        <img src="${game.image || 'images/placeholder.png'}" alt="${game.name}">
-        <div class="game-name">${game.name}</div>
-        <div class="game-rating">${'★'.repeat(game.rating)}${'☆'.repeat(5 - game.rating)}</div>
+      <div class="game-card" onclick="window.location.href='game_details.html?id=${game.gameId}'">
+        <img src="${game.image || 'images/placeholder.png'}" alt="${game.gameName || 'Unknown Game'}">
+        <div class="game-name">${game.gameName || 'Unknown Game'}</div>
+        <div class="game-rating">
+          ${'★'.repeat(game.rating || 0)}${'☆'.repeat(5 - (game.rating || 0))}
+        </div>
       </div>
     `).join('');
   }
 
+  // ⭐ RECENTLY PLAYED CAROUSEL
   function renderCarousel(recent) {
     if (!carousel) return;
-    carousel.innerHTML = recent.map(game => `
-      <div class="carousel-item">
-        <img src="${game.image || 'images/placeholder.png'}" alt="${game.name}">
+
+    carousel.innerHTML = recent.map(g => `
+      <div class="carousel-item" onclick="window.location.href='game_details.html?id=${g.gameId}'">
+        <img src="${g.image || 'images/placeholder.png'}" alt="${g.gameName || 'Unknown Game'}">
       </div>
     `).join('');
   }
 
+  // ⭐ RECENT REVIEWS SECTION
   function renderReviews(reviews) {
     if (!recentReviewsContainer) return;
-    recentReviewsContainer.innerHTML = reviews.length ? `
+
+    if (!reviews.length) {
+      recentReviewsContainer.innerHTML = "<h3>No reviews yet</h3>";
+      return;
+    }
+
+    recentReviewsContainer.innerHTML = `
       <h3>Recent Reviews</h3>
       ${reviews.map(r => `
-        <div class="review-item">
-          <img src="${r.image || 'images/placeholder.png'}" alt="${r.name}" class="review-game-img">
-          <div class="review-text"><strong>${r.name}:</strong> ${r.review}</div>
+        <div class="review-item" onclick="window.location.href='game_details.html?id=${r.gameId}'">
+          <img src="${r.image || 'images/placeholder.png'}" alt="${r.gameName || 'Unknown Game'}" class="review-game-img">
+          <div class="review-text">
+            <strong>${r.gameName || "Unknown Game"}:</strong> ${r.review || ""}
+          </div>
         </div>
       `).join('')}
-    ` : '<h3>No reviews yet</h3>';
-  }
-
-  // Called from log.js after a new log is saved
-  window.addNewLog = function(newLog) {
-    logs.unshift(newLog);
-    renderAll({ favouriteGames: logs, recentlyPlayed: logs, recentReviews: logs.filter(l => l.review) });
+    `;
   }
 
   fetchProfile();
